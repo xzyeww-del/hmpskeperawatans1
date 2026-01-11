@@ -1,0 +1,2604 @@
+ <!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMPSIK - Himpunan Mahasiswa Program Studi Ilmu Keperawatan S1</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f4ff',
+                            100: '#e0e7ff',
+                            500: '#667eea',
+                            0: '#5a67d8',
+                            700: '#4c51bf',
+                        },
+                        secondary: {
+                            500: '#764ba2',
+                            0: '#6b4394',
+                        }
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Strongly enforce Poppins for UI text and controls */
+        html, body, p, span, a, li, h1, h2, h3, h4, h5, h6, small, label,
+        input, textarea, select, button { font-family: 'Poppins', sans-serif !important; }
+
+        /* Preserve icon fonts (Font Awesome) so icons keep rendering */
+        .fa, .fas, .far, .fal, .fab, .fa-solid, .fa-regular, .fa-brands {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+            font-weight: 900 !important;
+        }
+        
+        body {
+            overflow-x: hidden;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #c7c7c7;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #5e616e 0%, #656a 100%);
+            border-radius: 10px;
+        }
+        
+        /* Gradient Background */
+        .gradient-bg {
+            background: linear-gradient(135deg, #353535 0%, #353535 100%);
+        }
+        
+        /* Hero Parallax */
+        .hero-parallax {
+            background-image: url('assets/BPH.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        /* Card Animations */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+        }
+        
+        /* Modal Animation */
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-content-animate {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        /* Fade In Up Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        /* Image Zoom on Hover */
+        .image-zoom {
+            overflow: hidden;
+        }
+        
+        .image-zoom img {
+            transition: transform 0.5s ease;
+        }
+        
+        .image-zoom:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Site logo helper: consistent sizing for logos (header/footer/sections) */
+        .site-logo {
+            height: 4rem;
+            width: auto;
+            display: inline-block;
+        }
+
+        @media (min-width: 768px) {
+            .site-logo { height: 5rem; }
+        }
+
+        /* New modal styles for departments */
+        .modal-departemen-header {
+            background: #424242;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-departemen-content {
+            padding: 1.5rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-departemen-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-departemen-section h3 {
+            font-weight: 0;
+            margin-bottom: 0.75rem;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+
+        .anggota-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* anggota card used inside departemen modal */
+        .anggota-card {
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* make member photos square (1:1) and slightly rounded */
+        .anggota-card img {
+            width: 100%;
+            aspect-ratio: 1/1; /* modern, keeps the image square */
+            object-fit: cover;
+            border-radius: 0.5rem; /* soft corners */
+            border: 3px solid rgba(0,0,0,0.06);
+            display: block;
+            max-width: 240px; /* keep images reasonable inside grid */
+        }
+
+        /* override grid in modal to show 3 columns on md/larger and 2 on small devices */
+        #modalAnggota.anggota-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            #modalAnggota.anggota-grid {
+                grid-template-columns: repeat(3, minmax(0,1fr));
+            }
+        }
+
+        /* 3:2 (width:height) helper for consistent image tiles */
+        .ratio-3-2 {
+            position: relative;
+            width: 100%;
+            padding-bottom: 66.6667%; /* 3:2 ratio */
+            overflow: hidden;
+            border-radius: 0.75rem;
+            background: #f3f4f6;
+        }
+
+        .ratio-3-2 img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .anggota-jabatan {
+            font-weight: 0;
+            color: #374151;
+        }
+
+        .anggota-nama {
+            color: #6b80;
+        }
+
+        .program-list, .agenda-list {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            color: #4b5563;
+        }
+
+        /* Make modal body text left-aligned content justify by default
+           so paragraphs and program/agenda items appear justified. */
+        .pengurusModal .modalBio,
+        .pengurusModal .modalProgram,
+        .pengurusModal .modalProgram li,
+        #departemenModal .modal-departemen-content p,
+        #departemenModal .modal-departemen-content li {
+            text-align: justify;
+        }
+
+        /* Hyphenation helper for small screens to improve justified text layout */
+        .hyphenate { -webkit-hyphens: none; -moz-hyphens: none; hyphens: none; }
+        @media (max-width: 767px) {
+            .hyphenate { -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; }
+        }
+
+        .program-list li, .agenda-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* modal image placeholder + spinner */
+        .img-placeholder { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(243,244,246,0.6)); z-index:30 }
+        .img-placeholder .spinner { --s:32px; width:var(--s); height:var(--s); border-radius:50%; border:3px solid rgba(0,0,0,0.08); border-top-color:rgba(102,126,234,0.9); animation: spin 1s linear infinite }
+        @keyframes spin { to { transform: rotate(360deg) } }
+        /* When slide is fully loaded we'll put a flag on slide .loaded and can animate out placeholder if desired */
+        .slide.loaded .img-placeholder { opacity:0; transition:opacity 200ms ease-out; pointer-events:none }
+
+        /* debug helper removed */
+    </style>
+</head>
+<body class="bg-gray-800">
+
+    <!-- Navbar -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <!-- Logo -->
+                    <div class="text-white text-3xl font-medium">
+                        <img src="angkatan.png" alt="Logo HMPSIK" class="site-logo h-10 md:h-10 w-12 md:w-12 object-contain rounded-lg" loading="lazy">
+                        ASKANTARA ARKA PRADANA
+                    </div>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#beranda" class="nav-link text-white hover:text-gray-200 font-medium transition-colors">Beranda</a>
+                    <a href="#tentang" class="nav-link text-white hover:text-gray-200 font-medium transition-colors">Tentang</a>
+                    <a href="#bph" class="nav-link text-white hover:text-gray-200 font-medium transition-colors">BPH</a>
+                    <a href="#departemen" class="nav-link text-white hover:text-gray-200 font-medium transition-colors">Departemen</a>
+                    <a href="#galeri" class="nav-link text-white hover:text-gray-200 font-medium transition-colors">Galeri</a>
+                    <a href="#footerKontak" class="nav-link text-white hover:text-gray-200 font-medium transition-colors">Kontak</a>
+                    <!-- Theme switcher (desktop) -->
+                    <div class="theme-switcher ml-3">
+                        <button class="theme-swatch" data-theme="default" aria-label="Use primary theme" title="Primary theme"></button>
+                        <button class="theme-swatch" data-theme="alt" aria-label="Use secondary theme" title="Secondary theme"></button>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" class="md:hidden text-white p-2" aria-controls="mobileMenu" aria-expanded="false" aria-label="Open mobile menu">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden gradient-bg" role="menu" aria-hidden="true">
+            <div class="px-4 pt-2 pb-4 space-y-2">
+                <a href="#beranda" class="block text-white hover:bg-white/10 px-4 py-3 rounded-lg transition">Beranda</a>
+                <a href="#tentang" class="block text-white hover:bg-white/10 px-4 py-3 rounded-lg transition">Tentang</a>
+                <a href="#bph" class="block text-white hover:bg-white/10 px-4 py-3 rounded-lg transition">BPH</a>
+                <a href="#departemen" class="block text-white hover:bg-white/10 px-4 py-3 rounded-lg transition">Departemen</a>
+                <a href="#galeri" class="block text-white hover:bg-white/10 px-4 py-3 rounded-lg transition">Galeri</a>
+                <a href="#footerKontak" class="block text-white hover:bg-white/10 px-4 py-3 rounded-lg transition">Kontak</a>
+                <div class="px-4 pt-2 pb-4 border-t border-white/20 mt-2 flex gap-3 items-center">
+                    <span class="text-sm text-white/90">Theme</span>
+                    <button class="theme-swatch" data-theme="default" aria-label="Primary theme"></button>
+                    <button class="theme-swatch" data-theme="alt" aria-label="Secondary theme"></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="relative min-h-[70vh] lg:min-h-screen flex items-center justify-left hero-parallax">
+        <div class="absolute inset-0 bg-gradient-to-br from-black/40 via-black/25 to-transparent"></div>
+        <div class="relative z-10 px-7 w-full fade-in-up">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="hero-left text-left text-white px-2 lg:px-6 space-y-4">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">HMPSIK</h1>
+                    <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light">Himpunan Mahasiswa Program Studi Ilmu Keperawatan S1</p>
+                    <p class="text-base sm:text-lg text-gray-200 max-w-xl mt-4">Universitas Muhammadiyah Purwokerto</p>
+                </div>
+
+                <!-- Right: Hero image inside the same grid column -->
+                <div class="hero-right w-full flex justify-center px-2 lg:px-6">
+                    <!-- Desktop-only slideshow (shows to the RIGHT of hero on large screens) -->
+                    <div class="hero-image hidden lg:block w-full max-w-2xl rounded-lg overflow-hidden shadow-lg">
+                        <div id="heroSlideshowDesktop" class="relative w-full aspect-[3/2] overflow-hidden rounded-1g bg-gray-200">
+                            <div class="slides h-full w-full relative">
+                                <img src="ssformal.png" alt="Foto 1" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" loading="lazy">
+                                <img src="IMG_8008.png" alt="Foto 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" loading="lazy">
+                                <img src="IMG_6845.JPG" alt="Foto 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" loading="lazy">
+                                <img src="IMG_8009.JPG" alt="Foto 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500" loading="lazy">
+                            </div>
+
+                            <!-- controls -->
+                            <div class="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex gap-2 items-center">
+                                <button class="prevSlide p-2 rounded-full bg-white/30 hover:bg-white text-gray-800 shadow" aria-label="Previous slide">‹</button>
+                            </div>
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex gap-2 items-center">
+                                <button class="nextSlide p-2 rounded-full bg-white/30 hover:bg-white text-gray-800 shadow" aria-label="Next slide">›</button>
+                            </div>
+
+                            <!-- indicators -->
+                            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                                <button class="indicator w-3 h-3 rounded-full bg-white/" data-index="0" aria-label="Go to slide 1"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Go to slide 2"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Go to slide 3"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Go to slide 4"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- On small devices the slideshow should appear below the hero (we'll add a duplicate below the section and keep this hidden at small width) -->
+        </div>
+        
+    <!-- Scroll Indicator (center-bottom) -->
+    <div class="absolute bottom-10 md:bottom-0 lg:-bottom-1/4 left-1/2 transform -translate-x-1/2 animate-bounce z-20">
+        </div>
+    </section>
+
+    <!-- Mobile-only slideshow (hidden on lg and above) -> appears BELOW the hero on small screens -->
+    <div class="w-full px-4 sm:px-6 lg:px-8 mt-2 lg:hidden">
+        <div id="heroSlideshowMobile" class="relative w-full rounded-xl overflow-hidden shadow-lg bg-gray-200">
+            <div class="slides h-64 sm:h-80 relative">
+                <img src="ssformal.png" alt="Foto 1" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy">
+                <img src="IMG_8008.png" alt="Foto 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy">
+                <img src="IMG_6845.JPG" alt="Foto 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy">
+                <img src="IMG_8009.JPG" alt="Foto 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy">
+            </div>
+
+            <div class="absolute left-4 top-1/2 -translate-y-1/2 z-20 flex gap-2 items-center">
+                <button class="prevSlide p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow" aria-label="Previous slide">‹</button>
+            </div>
+            <div class="absolute right-4 top-1/2 -translate-y-1/2 z-20 flex gap-2 items-center">
+                <button class="nextSlide p-2 rounded-full bg-white/80 hover:bg-white text-gray-800 shadow" aria-label="Next slide">›</button>
+            </div>
+
+            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                <button class="indicator w-3 h-3 rounded-full bg-white/" data-index="0" aria-label="Go to slide 1"></button>
+                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Go to slide 2"></button>
+                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Go to slide 3"></button>
+                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Go to slide 4"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visi & Misi Section -->
+    <section id="tentang" class="pt-12 md:pt-20 pb-0 md:pb-0 bg-white">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-1 gap-8 lg:gap-12 w-full items-center">
+                <!-- Left: Logos -->
+                <div class="flex flex-initial items-center md:items-start justify-center space-y-8">
+                    <!-- Arrange logos horizontally and allow wrapping on small screens -->
+                    <div class="flex flex-row items-center justify-center space-x-6 md:space-x-12">
+                        <!-- keep logos on one line; responsive heights so they scale on small devices -->
+                        <img src="UMP.png" alt="Logo UMP" class="site-logo h-24 sm:h-28 md:h-36 lg:h-36 w-auto object-contain rounded-lg" loading="lazy">
+                        <img src="hmpsik.png" alt="Logo HMPSIK" class="site-logo h-24 sm:h-28 md:h-36 lg:h-36 w-auto object-contain rounded-lg" loading="lazy">
+                        <img src="angkatan.png" alt="Logo Aksantara" class="site-logo h-24 sm:h-28 md:h-36 lg:h-36 w-auto object-contain rounded-lg" loading="lazy">
+                    </div>
+                </div>
+                <div class="text-left mb-1">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-700">
+                    VISI MISI
+                </h2>
+                <p class="text-2xl md:text-3xl lg:text-4xl font-family mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-700">
+                    HMPS ILMU KEPERAWATAN S1
+                </p>
+                </div>
+
+                <!-- Middle: Combined Visi & Misi -->
+                <div class="bg-white rounded-3xl shadow-2xl p-6 lg:p-8 card-hover border-t-4">
+                    <div class="mb-6">
+                        <h3 class="text-3xl font-bold text-gray-800">Visi</h3>
+                        <p class="text-gray-600 text-lg leading-relaxed mt-3 text-justify hyphenate">
+                            Mewujudkan HMPSIK yang profesional, berintegritas, bermanfaat, dan berprestasi, serta menjadi rumah aspirasi bagi seluruh mahasiswa Keperawatan.
+                        </p>
+                    </div>
+                    <div class="mt-6">
+                        <h3 class="text-3xl font-bold text-gray-800">Misi</h3>
+                        <ol class="mt-4 space-y-4 text-gray-600 text-lg list-decimal list-inside">
+                            <li>Menghadirkan program kerja yang inovatif, adaptif, dan berdampak nyata.</li>
+                            <li>Menumbuhkan solidaritas, keterbukaan, dan budaya kerja sama yang harmonis.</li>
+                            <li>Menjadi wadah yang aktif, mendengar, dan menampung aspirasi mahasiswa keperawatan S1 secara efektif.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- Right: Contact card (moved from footer) -->
+                <div id="kontak" class="bg-white/5 p-6 rounded-3xl border border-white/10 md:col-span-1 text-center">
+                    <h3 class="text-2xl font-bold text-white mb-4">Kontak</h3>
+                    <p class="text-sm text-white/80 mb-4 w-full">Butuh informasi lebih lanjut? Hubungi kami melalui media berikut atau kirim email.</p>
+                    <div class="flex items-center justify-center gap-3 mb-4">
+                        <a href="https://www.instagram.com/hmpsik_ump" class="w-12 h-12 bg-white/10 hover:bg-white hover:text-gray-800 rounded-full flex items-center justify-center transition-all transform hover:scale-110" aria-label="Instagram HMPSIK">
+                            <i class="fab fa-instagram text-lg text-white"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@hmpsiks1_ump" class="w-12 h-12 bg-white/10 hover:bg-white hover:text-gray-800 rounded-full flex items-center justify-center transition-all transform hover:scale-110" aria-label="TikTok HMPSIK">
+                            <i class="fab fa-tiktok text-lg text-white"></i>
+                        </a>
+                        <a href="mailto:hmpsik.ump@gmail.com" class="w-12 h-12 bg-white/10 hover:bg-white hover:text-gray-800 rounded-full flex items-center justify-center transition-all transform hover:scale-110" aria-label="Email HMPSIK">
+                            <i class="fas fa-envelope text-lg text-white"></i>
+                        </a>
+                    </div>
+                    <p class="text-sm text-white/70">Dusun II, Sokaraja Kulon, Kec. Sokaraja, Kab. Banyumas, Jawa Tengah 53181</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+<!-- BPH Section -->
+<section id="bph" class="pt-0 md:pt-0 pb-2 md:pb-2 bg-gray-50">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-700">
+                KEPENGURUSAN HMPSIK 2025/2026
+            </h2>
+            <div class="w-30 h-1 bg-gradient-to-r from-gray-700 to-gray-700 mx-auto rounded-full"></div>
+            <section id="bph" class="py-2 md:py-2 bg-gray-50"></section>
+            <h2 class="text-4xl md:text-5xl lg:text-3xl font-bold mb-5 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-700">
+                Ketua Dan Wakil Ketua 
+            </h2>
+        </div>
+        <!-- Banner image 16:9 -->
+        <div class="mb-8 flex justify-center">
+        <div class="w-full max-w-3xl aspect-[16/9] rounded-2xl shadow-xl overflow-hidden">
+            <img 
+            data-src="assets/bph/KETUA DAN WAKIL.jpg"
+            src="assets/bph/KETUA DAN WAKIL.jpg"
+            alt="Ketua dan Wakil Ketua" 
+            class="w-full h-full object-cover" 
+            loading="lazy"
+            onerror="handleImageError(this,'https://via.placeholder.com/1280x0/eeeeee/777777?text=Ketua+Wakil',true)"
+            >
+        </div>
+        </div>
+
+        <!-- Ketua dan Wakil Ketua -->
+        <div class="pengurus-group">
+            <div class="grid sm:grid-cols-2 gap-8 w-full mb-16">
+            <!-- Ketua -->
+                  <div class="pengurus-card bg-gray-100 rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                      data-name="Sri Wahyuni"
+                      data-jabatan="Ketua HMPSIK 2025/2026"
+                      data-image="assets/ketua.png"
+                      data-logo="k.png"
+                 data-foto-bersama="assets/bph/KETUA.jpg"
+                 data-bio="Ketua HMPSIK adalah pimpinan lembaga eksekutif tingkat Program Studi Ilmu Keperawatan S1. Ketua HMPSIK bertugas sebagai penanggung jawab jalannya HMPSIK, membuat dan melaksanakan program kerja selama 1 periode kepengurusan, memperjuangkan aspirasi mahasiswa Program Studi Ilmu Keperawatan S1, menyampaikan laporan pertanggungjawaban (LPJ) HMPSIK dalam MMPS dan Musyang HMPSIK, menaati peraturan yang ada di KM FIKES UMP, mengoordinasikan, mengorganisasikan, serta menjaga keutuhan dan kekompakan seluruh pengurus dan anggota HMPSIK."
+                 data-program="Rapat Kerja BPH, Rapat Struktural, Best of Departemen, Best of Member, MMPS 1 & 2, MMPS 3">
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-gray-0 to-gray-0 image-zoom">
+                 <img src="k.png" alt="Foto Wakil Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">    
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-user text-9xl text-white/80"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Ketua</h3>
+                    <p class="text-gray-500 text-lg mb-4">Sri Wahyuni</p>
+                    <div class="flex items-center text-gray-0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wakil Ketua -->
+              <div class="pengurus-card bg-gray-100 rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                 data-name="Katrin Nur Khofiyan"
+                 data-jabatan="Wakil Ketua HMPSIK 2025/2026"
+                 data-image="assets/wakil.png"
+                  data-logo="wk.png"
+                 data-foto-bersama="assets/bph/WAKIL.jpg"
+                 data-bio="Wakil ketua HMPSIK bertugas bersama dengan ketua menjalankan amanah organisasi HMPSIK, mewakili tugas-tugas ketua apabila dari ketua berhalangan, bertanggung jawab terhadap proses pengembangan dan pengoptimalisasian setiap departemen, mengoordinasikan pelaksanaan pengawasan peningkatan disiplin kerja, bersama ketua mengoordinasikan, mengorganisasikan, serta menjaga keutuhan dan kekompakan seluruh pengurus dan anggota HMPSIK."
+                 data-program="Rapat Kerja BPH, Rapat Struktural, Best of Departemen, Best of Member, MMPS 1 & 2, MMPS 3">
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-gray-0 to-gray-0 image-zoom">
+                 <img src="wk.png" alt="Foto Wakil Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">    
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-user text-9xl text-white/80"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Wakil Ketua</h3>
+                    <p class="text-gray-500 text-lg mb-4">Katrin Nur Khofiyan</p>
+                    <div class="flex items-center text-gray-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- per-group modal for Ketua & Wakil (now same layout as Sekretaris) -->
+        <div class="pengurusModal fixed inset-0 z-[9999] hidden items-start justify-center p-0 bg-black/70 backdrop-blur-sm">
+            <div class="bg-white rounded-none w-full h-full modal-content-animate flex flex-col items-start relative py-6 px-4 overflow-y-auto" role="dialog" aria-modal="true">
+                <button class="closeModalBtn absolute top-6 right-6 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all hover:rotate-90 duration-300">
+                    <i class="fas fa-times text-gray-700 text-xl"></i>
+                </button>
+
+                <div class="mb-4 w-full flex justify-center mt-16">
+                    <img class="modalFotoBersama rounded-2xl shadow-lg max-w-full h-auto max-h-64 object-cover" src="" onerror="handleImageError(this,'')">
+                </div>
+
+                <h2 class="modalName mt-6 text-2xl font-bold text-center mb-1 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-800"></h2>
+                <h3 class="modalJabatan text-lg font-semibold text-center mb-6 text-gray-0"></h3>
+
+                <div class="mb-6 w-full">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Deskripsi Tugas:</h4>
+                    <p class="modalBio text-gray-700 text-justify hyphenate"></p>
+                </div>
+
+                <div class="mb-6 w-full">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Program Kerja:</h4>
+                    <ul class="modalProgram list-disc list-inside text-gray-700 space-y-1"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sekretaris Umum -->
+        <section id="sekretaris umum" class="pt-20 md:pt-32 pb-2 md:pb-2 bg-gray-50">
+            <div class="w-full px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl lg:text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-800">
+                Sekretaris Umum
+            </h2>
+                </div>
+        <!-- Banner image 16:9 -->
+        <div class="mb-8 flex justify-center">
+        <div class="w-full max-w-3xl aspect-[16/9] rounded-2xl shadow-xl overflow-hidden">
+            <img 
+            data-src="assets/bph/SEKRETARIS UMUM.jpg"
+            src="assets/bph/SEKRETARIS UMUM.jpg"
+            alt="Ketua dan Wakil Ketua" 
+            class="w-full h-full object-cover" 
+            loading="lazy"
+            onerror="handleImageError(this,'https://via.placeholder.com/1280x0/eeeeee/777777?text=Ketua+Wakil',true)"
+            >
+        </div>
+        </div>
+                
+                <!-- two-column grid like Ketua & Wakil -->
+                    <div class="pengurus-group">
+                    <div class="grid sm:grid-cols-2 gap-8 w-full mb-16">
+                    <!-- Sekretaris 1 -->
+                    <div class="pengurus-card bg-white rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                     data-name="Agis Azizah"
+                     data-jabatan="Sekretaris Umum 1 HMPSIK 2025/2026"
+                     data-foto-bersama="assets/sekretaris1.jpg"
+                     data-bio="Sekretaris umum bertugas bertanggung jawab atas manajemen administrasi HMPSIK, pengarsipan dokumen, pendokumentasian hasil rapat, pembuatan dokumen-dokumen kesekretariatan, bersama bendahara melengkapi perangkat kesekretariatan, bersama ketua menandatangani surat-surat organisasi, membuat daftar inventaris lembaga HMPSIK, dan menentukan kebijakan terkait dengan administrasi dan kesekretariatan guna kelancaran organisasi."
+                     data-program="Pelatihan Administrasi, Rekapitulasi Surat Masuk dan Keluar, Daftar inventaris, Daftar Arsip">
+                    <div class="relative aspect-[4/3] bg-gradient-to-br from-blue-500 to-indigo-0 image-zoom">
+                     <img src="s1.png" alt="Foto Wakil Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">    
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-user text-7xl text-white/80"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-gray-800 mb-2">Sekretaris Umum 1</h4>
+                        <p class="text-gray-500">Agis Azizah</p>
+                    </div>
+                </div>
+
+                <!-- Sekretaris 2 -->
+                <div class="pengurus-card bg-white rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                     data-name="A.Khoerun Ni'am Aufa Rafiqi"
+                     data-jabatan="Sekretaris Umum 2 HMPSIK 2025/2026"                     data-foto-bersama="assets/sekretaris2.jpg"
+                     data-bio="Sekretaris umum bertugas bertanggung jawab atas manajemen administrasi HMPSIK, pengarsipan dokumen, pendokumentasian hasil rapat, pembuatan dokumen-dokumen kesekretariatan, bersama bendahara melengkapi perangkat kesekretariatan, bersama ketua menandatangani surat-surat organisasi, membuat daftar inventaris lembaga HMPSIK, dan menentukan kebijakan terkait dengan administrasi dan kesekretariatan guna kelancaran organisasi."
+                     data-program="Pelatihan Administrasi, Rekapitulasi Surat Masuk dan Keluar, Daftar inventaris, Daftar Arsip">
+                    <div class="relative aspect-[4/3] bg-gradient-to-br from-blue-500 to-indigo-0 image-zoom">
+                        <img src="s2.png" alt="Foto Wakil Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-user text-7xl text-white/80"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-gray-800 mb-2">Sekretaris Umum 2</h4>
+                        <p class="text-gray-500">A.Khoerun Ni'am Aufa Rafiqi</p>
+                    </div>
+                </div>
+
+                <!-- Sekretaris 3 -->
+                <div class="pengurus-card bg-white rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                     data-name="Sigit Maulana"
+                     data-jabatan="Sekretaris Umum 3 HMPSIK 2025/2026"
+                     data-foto-bersama="assets/sekretaris3.jpg"
+                     data-bio="Sekretaris umum bertugas bertanggung jawab atas manajemen administrasi HMPSIK, pengarsipan dokumen, pendokumentasian hasil rapat, pembuatan dokumen-dokumen kesekretariatan, bersama bendahara melengkapi perangkat kesekretariatan, bersama ketua menandatangani surat-surat organisasi, membuat daftar inventaris lembaga HMPSIK, dan menentukan kebijakan terkait dengan administrasi dan kesekretariatan guna kelancaran organisasi."
+                     data-program="Pelatihan Administrasi, Rekapitulasi Surat Masuk dan Keluar, Daftar inventaris, Daftar Arsip">
+                    <div class="relative aspect-[4/3] bg-gradient-to-br from-blue-500 to-indigo-0 image-zoom">
+                        <img src="s3.png" alt="Foto Wakil Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fas fa-user text-7xl text-white/80"></i>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="text-xl font-bold text-gray-800 mb-2">Sekretaris Umum 3</h4>
+                        <p class="text-gray-500">Sigit Maulana</p>
+                    </div>
+                </div>
+                    </div>
+                </div>
+
+        <!-- per-group modal for Sekretaris -->
+        <div class="pengurusModal fixed inset-0 z-[9999] hidden items-start justify-center p-0 bg-black/70 backdrop-blur-sm">
+            <div class="bg-white rounded-none w-full h-full modal-content-animate flex flex-col items-start relative py-6 px-4 overflow-y-auto" role="dialog" aria-modal="true">                </div>
+                <button class="closeModalBtn absolute top-6 right-6 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all hover:rotate-90 duration-300">
+                    <i class="fas fa-times text-gray-700 text-xl"></i>
+                </button>
+
+                <div class="mb-4 w-full flex justify-center mt-16">
+                    <img class="modalFotoBersama rounded-2xl shadow-lg max-w-full h-auto max-h-64 object-cover" src="" onerror="handleImageError(this,'')">
+                </div>
+
+                <h2 class="modalName mt-6 text-2xl font-bold text-center mb-1 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-800"></h2>
+                <h3 class="modalJabatan text-lg font-semibold text-center mb-6 text-gray-0"></h3>
+
+                <div class="mb-6 w-full">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Deskripsi Tugas:</h4>
+                    <p class="modalBio text-gray-700 text-justify hyphenate"></p>
+                </div>
+
+                <div class="mb-6 w-full">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Program Kerja:</h4>
+                    <ul class="modalProgram list-disc list-inside text-gray-700 space-y-1"></ul>
+                </div>
+            </div>
+        </div>
+
+ <!-- Bendahara Umum Section -->
+<section id="bendahara umum" class="pt-20 md:pt-32 pb-2 md:pb-2 bg-gray-50">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl lg:text-3xl font-bold mb-1 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-700">
+                Bendahara Umum
+            </h2>
+
+        <!-- Banner image 16:9 -->
+        <div class="mb-8 flex justify-center">
+        <div class="w-full max-w-3xl aspect-[16/9] rounded-2xl shadow-xl overflow-hidden">
+            <img 
+            data-src="assets/bph/BENDAHARA UMUM.jpg"
+            src="assets/bph/BENDAHARA UMUM.jpg"
+            alt="Ketua dan Wakil Ketua" 
+            class="w-full h-full object-cover" 
+            loading="lazy"
+            onerror="handleImageError(this,'https://via.placeholder.com/1280x0/eeeeee/777777?text=Ketua+Wakil',true)"
+            >
+        </div>
+        </div>
+
+        <!-- Bendahara Umum -->
+        <div class="pengurus-group">
+        <div class="grid sm:grid-cols-2 gap-8 w-full mb-16">
+            <!-- Bendahara Umum 1 -->
+              <div class="pengurus-card bg-white rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                  data-name="Shafa Nafisa M."
+                  data-jabatan="Bendahara Umum 1 HMPSIK 2025/2026"
+                  data-image="assets/bendahara1.jpg"
+                  data-foto-bersama="assets/bendahara1.jpg"
+                 data-bio="Bendahara umum bertugas memegang kebijaksanaan terhadap keuangan HMPSIK, mengatur, menyimpan, dan mengelola keuangan HMPSIK, mengatur dan mengontrol keuangan disetiap kepanitiaan dan kepengurusan HMPSIK, bertanggung jawab atas kas organisasi, menentukan, menetapkan peraturan, serta membuat laporan umum yang berkaitan dengan pemasukan dan pengeluaran keuangan HMPSIK dan melaporkan kepada pengurus harian secara berkala."
+                 data-program="Pembukuan, DAWALRUS (Dana Awal Pengurus), PeKas Bulanan HMPSIK, Pengelolaan Bukti Transaksi, Pelaporan Keuangan">
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-gray-0 to-gray-0 image-zoom">
+                  <img src="b1.png" alt="Foto Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-user text-9xl text-white/80"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Bendahara Umum 1</h3>
+                    <p class="text-gray-500 text-lg mb-4">Shafa Nafisa M.</p>
+                    <div class="flex items-center text-gray-0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bendahara Umum 2 -->
+              <div class="pengurus-card bg-white rounded-2xl overflow-hidden shadow-xl card-hover cursor-pointer group"
+                  data-name="Reisya Adetia."
+                  data-jabatan="Bendahara Umum 1 HMPSIK 2025/2026"
+                  data-image="assets/bendahara2.jpg"
+                  data-foto-bersama="assets/bendahara2.jpg"
+                 data-bio="Bendahara umum bertugas memegang kebijaksanaan terhadap keuangan HMPSIK, mengatur, menyimpan, dan mengelola keuangan HMPSIK, mengatur dan mengontrol keuangan disetiap kepanitiaan dan kepengurusan HMPSIK, bertanggung jawab atas kas organisasi, menentukan, menetapkan peraturan, serta membuat laporan umum yang berkaitan dengan pemasukan dan pengeluaran keuangan HMPSIK dan melaporkan kepada pengurus harian secara berkala."
+                 data-program="Pembukuan, DAWALRUS (Dana Awal Pengurus), PeKas Bulanan HMPSIK, Pengelolaan Bukti Transaksi, Pelaporan Keuangan">
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-gray-0 to-gray-0 image-zoom">
+                  <img src="b2.png" alt="Foto Ketua" class="absolute inset-0 w-full h-full object-cover" loading="lazy" onerror="handleImageError(this,'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto',true)">
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-user text-9xl text-white/80"></i>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Bendahara Umum 2</h3>
+                    <p class="text-gray-500 text-lg mb-4">Reisya Adetia.</p>
+                    <div class="flex items-center text-gray-0">
+                    </div>
+            </div>
+        </div>
+
+        <!-- per-group modal for Bendahara -->
+        <div class="pengurusModal fixed inset-0 z-[9999] hidden items-start justify-center p-0 bg-black/70 backdrop-blur-sm">
+            <div class="bg-white rounded-none w-full h-full modal-content-animate flex flex-col items-start relative py-6 px-4 overflow-y-auto" role="dialog" aria-modal="true">
+                <!-- modal logo intentionally removed here -->
+                <button class="closeModalBtn absolute top-6 right-6 z-10 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-all hover:rotate-90 duration-300">
+                    <i class="fas fa-times text-gray-700 text-xl"></i>
+                </button>
+
+                <div class="mb-4 w-full flex justify-center mt-16">
+                    <img class="modalFotoBersama rounded-2xl shadow-lg max-w-full h-auto max-h-64 object-cover" src="" onerror="handleImageError(this,'')">
+                </div>
+
+                <h2 class="modalName mt-6 text-2xl font-bold text-center mb-1 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-800"></h2>
+                <h3 class="modalJabatan text-lg font-semibold text-center mb-6 text-gray-0"></h3>
+
+                <div class="mb-6 w-full">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Deskripsi Tugas:</h4>
+                    <p class="modalBio text-gray-700 text-justify hyphenate"></p>
+                </div>
+
+                <div class="mb-6 w-full">
+                    <h4 class="text-xl font-bold text-gray-800 mb-3">Program Kerja:</h4>
+                    <ul class="modalProgram list-disc list-inside text-gray-700 space-y-1"></ul>
+                </div>
+            </div>
+        </div>
+</section>
+
+
+<!-- Departemen Section -->
+<section id="departemen" class="pt-20 md:pt-32 pb-2 md:pb-2 bg-white">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-800">
+                Departemen HMPSIK
+            </h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-gray-0 to-gray-0 mx-auto rounded-full"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+            
+            <!-- Departemen Pengkaderan -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Pengkaderan"
+                 data-deskripsi="Departemen Kesehatan adalah departemen yang bertugas untuk mengayomi dan membina pengurus dan anggota HMPSIK."
+                 data-program="Uprading dan Makrab HMPSIK 2025/2026, AKRANA PENGABDIAN MASYARAKAT, OPREC (Open Reccuitment) Calon Pengurus HMPSIK Periode 2026/2027"
+                 data-agenda="Kader Peduli"
+                 data-anggota='[
+                    {"jabatan": "Koordinator", "nama": "Ibnu Muhammad N", "foto": "<img src=\"assets/Ibnu Muhammad N.png\">"},
+                    {"jabatan": "Sekretaris", "nama": "Nabilah Nur Syfa", "foto": "<img src=\"assets/Nabilah Nur Syfa2.png\">"},
+                    {"jabatan": "Anggota", "nama": "Resa Adinda Saputri", "foto": "<img src=\"assets/Resa Adinda Saputri.png\">"},
+                    {"jabatan": "Anggota", "nama": "Amelia Rahmadani", "foto": "<img src=\"assets/Amelia Rahmadani.png\">"},
+                     {"jabatan": "Anggota", "nama": "Embun Putri Megawangi", "foto": "<img src=\"assets/Embun Putri Megawangi.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d1.png" alt="Departemen Kesehatan" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Pengkaderan</h3>
+                    <p class="text-gray-0">Koordinator: Ibnu Muhammad N.</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Kajian Strategis dan Advokasi -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Kajian Strategis dan Advokasi"
+                 data-deskripsi="Departemen Kastrad (Kajian Strategi dan Advokasi) adalah departemen yang bertugas sebagai wadah aspirasi mahasiswa untuk menyalurkan aspirasi ke pimpinan secara lebih sistematis dan membahas isu dalam dunia kesehatan terutama dalam keperawatan."
+                 data-program="Mengenal KASTRAD (Kajian Strategi dan Advokasi), Pelatihan Persidangan, Kotak Saran (Takaran), Nursing Debate Championship NDC."
+                 data-agenda=""
+                 data-anggota='[
+                    {"jabatan": "Koordinator", "nama": "Ana Safitri", "foto": "<img src=\"assets/Ana Safitri.png\">"},
+                    {"jabatan": "Sekretaris", "nama": "Jihan Nasywa F", "foto": "<img src=\"assets/Jihan Nasywa F.png\">"},
+                    {"jabatan": "Anggota", "nama": "Rahmawati Dini K", "foto": "<img src=\"assets/Rahmawati Dini K.png\">"},
+                    {"jabatan": "Anggota", "nama": "Windi Rahmawati", "foto": "<img src=\"assets/Windi Rahmawati.png\">"},
+                    {"jabatan": "Anggota", "nama": "Zavira Gita A", "foto": "<img src=\"assets/Zavira Gita A.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d2.png" alt="Departemen Kajian Strategis dan Advokasi" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Kajian Strategis dan Advokasi</h3>
+                    <p class="text-gray-0">Koordinator: Ana Safitri</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Pendidikan dan Keilmuan -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Pendidikan dan Keilmuan"
+                 data-deskripsi="Departemen P&K (Pendidikan dan Keilmuan) adalah departemen yang bergerak di bidang intelektualitas dan bertugas untuk memberikan fasilitas mahasiswa Ilmu Keperawatan S1 untuk mengembangkan minat bakat dalam bidang keilmuan dan menjadikan mahasiswa Program Studi Ilmu Keperawatan S1 yang berkompeten."
+                 data-program="Seminar Internasional NUMERUS, Lomba NUMERUS"
+                 data-agenda="Video Edukasi"
+                 data-anggota='[
+                     {"jabatan": "Koordinator", "nama": "Cintia Tri Anggraeni", "foto": "<img src=\"assets/Cintia Tri Anggraeni2.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Nur Isnaeni", "foto": "<img src=\"assets/Nur Isnaeni.png\">"},
+                     {"jabatan": "Anggota", "nama": "Imas Fatimah", "foto": "<img src=\"assets/Imas Fatimah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Tasya Saraswati", "foto": "<img src=\"assets/Tasya Saraswati.png\">"},
+                     {"jabatan": "Anggota", "nama": "Widya Sukma Ningrum", "foto": "<img src=\"assets/Widya Sukma Ningrum2.png\">"},
+                     {"jabatan": "Anggota", "nama": "Anggelica Sarah P", "foto": "<img src=\"assets/Anggelica Sarah P.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d3.png" alt="Departemen Pendidikan dan Keilmuan" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Pendidikan dan Keilmuan</h3>
+                    <p class="text-gray-0">Koordinator: Cintia Tri Anggraeni</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Kerohanian -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Kerohanian"
+                 data-deskripsi="Departemen kerohanian adalah departemen yang bergerak dalam bidang religiusitas."
+                 data-program="Akranifest (Aksantara Islamic Fest), Ramadhan Action, Kabar Akrana"
+                 data-agenda=""
+                 data-anggota='[
+                     {"jabatan": "Koordinator", "nama": "Ainun Fatma", "foto": "<img src=\"assets/Ainun Fatma.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Mugi Ayu R", "foto": "<img src=\"assets/Mugi Ayu R.png\">"},
+                     {"jabatan": "Anggota", "nama": "Vira Dwi Nurhaziza", "foto": "<img src=\"assets/Vira Dwi Nurhaziza.png\">"},
+                     {"jabatan": "Anggota", "nama": "Lauriqu Qonita", "foto": "<img src=\"assets/Lauriqu Qonita.png\">"},
+                     {"jabatan": "Anggota", "nama": "Dea Pratiwi Latifah", "foto": "<img src=\"assets/Dea Pratiwi Latifah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Syifa Nur Aly", "foto": "<img src=\"assets/Syifa Nur Aly.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d4.png" alt="Departemen Kesehatan" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Kerohanian</h3>
+                    <p class="text-gray-0">Koordinator: Ainun Fatma</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Seni Budaya dan Olahraga -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Seni Budaya dan Olahraga"
+                 data-deskripsi="Departemen Seni Budaya dan Olahraga adalah departemen yang bertujuan sebagai wadah bagi mahasiswa Program Studi Ilmu Keperawatan S1 untuk menyalurkan minat dan bakat dalam hal keolahragaan, seni, dan kebudayaan."
+                 data-program="Akrana Competition, Voice of Glory"
+                 data-agenda="Pelatihan Futsal, Badminton, dan Band, Peringatan Hari Puisi Nasional"
+                 data-anggota='[
+                     {"jabatan": "Koordinator", "nama": "Dwi Apriliana", "foto": "<img src=\"assets/Dwi Apriliana.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Salimatul Maulidiyah", "foto": "<img src=\"assets/Salimatul Maulidiyah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Nazila Intan Agustin", "foto": "<img src=\"assets/Nazila Intan Agustin.png\">"},
+                     {"jabatan": "Anggota", "nama": "Lulu Lutfiatul Fajriah", "foto": "<img src=\"assets/Lulu Lutfiatul Fajriah2.png\">"},
+                     {"jabatan": "Anggota", "nama": "Ahnaf Faiq Adi Kara", "foto": "<img src=\"assets/Ahnaf Faiq Adi Kara.png\">"},
+                     {"jabatan": "Anggota", "nama": "Mohammad Iqbal Firjatulloh", "foto": "<img src=\"assets/Mohammad Iqbal Firjatulloh.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d5.png" alt="Departemen Seni Budaya dan Olahraga" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Seni Budaya dan Olahraga</h3>
+                    <p class="text-gray-0">Koordinator: Dwi Apriliana</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Medikominfo -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Medikominfo"
+                 data-deskripsi="Departemen Medikominfo adalah departemen yang berperan dalam menyampaikan segala informasi yang berasal dari dalam maupun luar HMPSIK."
+                 data-program="Nursing Challenge, Pamflet Hari Besar (Nasional dan Internasional), Mini Vlog, Video Profil dan Website HMPSIK, Talk To Med (TTM)"
+                 data-agenda=""
+                 data-anggota='[
+                     {"jabatan": "Koordinator", "nama": "Alya Shinta Bela", "foto": "<img src=\"assets/Alya Shinta Bela.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Devi Puspitasari", "foto": "<img src=\"assets/Devi Puspitasari.png\">"},
+                     {"jabatan": "Anggota", "nama": "Fera Winarti", "foto": "<img src=\"assets/Fera Winarti.png\">"},
+                     {"jabatan": "Anggota", "nama": "Laela Rahmadani", "foto": "<img src=\"assets/Laela Rahmadani.png\">"},
+                     {"jabatan": "Anggota", "nama": "Cahya Purnama M", "foto": "<img src=\"assets/Cahya Purnama M.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d6.png" alt="Departemen Medikominfo" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Medikominfo</h3>
+                    <p class="text-gray-0">Koordinator: Alya Shinta Bela</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Kewirausahaan -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Kewirausahaan"
+                 data-deskripsi="Departemen Kewirausahaan adalah departemen yang bertugas sebagai tempat untuk mahasiswa Program Studi Ilmu Keperawatan S1 dalam mengembangkan kemampuan berwirausaha."
+                 data-program="Pakaian Dinas Harian (PDH), Menjual Atribut (Name tag, Pin, dan Bordir), Jual Jilbab Medis, Dana Usaha"
+                 data-agenda="Stand Pasar Ramadhan"
+                 data-anggota='[
+                     {"jabatan": "Koordinator", "nama": "Anisa Kusuma W", "foto": "<img src=\"assets/Anisa Kusuma W.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Purusti Rois Khotimah", "foto": "<img src=\"assets/Purusti Rois Khotimah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Annisa Al-A’ini", "foto": "<img src=\"assets/Annisa Al-A’ini.png\">"},
+                     {"jabatan": "Anggota", "nama": "Dian Wahyuni", "foto": "<img src=\"assets/Dian Wahyuni.png\">"},
+                     {"jabatan": "Anggota", "nama": "Zia Nisa", "foto": "<img src=\"assets/Zia Nisa.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d7.png" alt="Departemen Kewirausahaan" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Kewirausahaan</h3>
+                    <p class="text-gray-0">Koordinator: Anisa Kusuma W</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Hubungan Luar -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Hubungan Luar"
+                 data-deskripsi="Departemen Hublu (Hubungan Luar) adalah departemen yang bertugas sebagai penghubung antara pihak eksternal dengan pihak internal HMPSIK dan berfungsi sebagai mengatur delegasi untuk kegiatan eksternal HMPSIK."
+                 data-program="Delegasi Undangan, Nursing Students Eager To Speak, Exchange Of Excellence, Study Banding"
+                 data-agenda="Tamasya Kerja, Strategic partnerships"
+                 data-anggota='[
+                    {"jabatan": "Koordinator", "nama": "Dzaky Arhabi", "foto": "<img src=\"assets/Dzaky Arhabi.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Sahara Lutfi Lukita", "foto": "<img src=\"assets/Sahara Lutfi Lukita.png\">"},
+                     {"jabatan": "Anggota", "nama": "Farah Najwa Sakinah", "foto": "<img src=\"assets/Farah Najwa Sakinah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Firotul Azyan Zera A", "foto": "<img src=\"assets/Firotul Azyan Zera A.png\">"},
+                     {"jabatan": "Anggota", "nama": "Tsania Isyfa Adyani", "foto": "<img src=\"assets/Tsania Isyfa Adyani.png\">"},
+                     {"jabatan": "Anggota", "nama": "Irfan Najmudin", "foto": "<img src=\"assets/Irfan Najmudin.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d8.png" alt="Departemen Hubungan Luar" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Hubungan Luar</h3>
+                    <p class="text-gray-0">Koordinator: Dzaky Arhabi</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+            <!-- Departemen Kesehatan -->
+            <div class="departemen-card bg-white rounded-2xl shadow-xl p-8 card-hover border-t-4 border-white cursor-pointer"
+                 data-nama="Departemen Kesehatan"
+                 data-deskripsi="Departemen kesehatan adalah departemen yang bergerak dalam bidang kesehatan dan berfungsi sebagai penyalur informasi kesehatan maupun melakukan kegiatan yang meningkatkan kesehatan masyarakat."
+                 data-program="Donor Darah, Penyuluhan dan Cek Kesehatan"
+                 data-agenda="Pelatihan Cek Kesehatan, Cek Kesehatan Gratis"
+                 data-anggota='[
+                     {"jabatan": "Koordinator", "nama": "Chindy Olivia A", "foto": "<img src=\"assets/Chindy Olivia A.png\">"},
+                     {"jabatan": "Sekretaris", "nama": "Chintia Mukhotimah", "foto": "<img src=\"assets/Chintia Mukhotimah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Echa Sabrina Awalia Rahmadani", "foto": "<img src=\"assets/Echa Sabrina Awalia Rahmadani.png\">"},
+                     {"jabatan": "Anggota", "nama": "Istiqomah", "foto": "<img src=\"assets/Istiqomah.png\">"},
+                     {"jabatan": "Anggota", "nama": "Ana Lestari", "foto": "<img src=\"assets/Ana Lestari2.png\">"}
+                 ]'>
+                <div class="mb-4">
+                    <div class="ratio-3-2 image-zoom shadow-sm">
+                        <img src="d9.png" alt="Departemen Kesehatan" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Departemen Kesehatan</h3>
+                    <p class="text-gray-0">Koordinator: Chindy Olivia A.</p>
+                </div>
+                <div class="flex items-center text-gray-0">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span class="text-sm font-semibold">Lihat Detail Departemen</span>
+                </div>
+            </div>
+            
+        </div>
+        </div>
+
+        <!-- moved Bendahara modal into the Bendahara section above -->
+</section>
+
+<!-- Modal Detail Departemen -->
+<div id="departemenModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="bg-white rounded-md shadow-2xl max-w-full overflow-hidden modal-content-animate flex flex-col relative max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="modal-departemen-header">
+            <button id="closeDepartemenModal" class="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all hover:rotate-90 duration-300">
+                <i class="fas fa-times text-white text-xl"></i>
+            </button>
+            <h2 id="modalDepartemenNama" class="text-2xl font-bold mb-2 text-white"></h2>
+            <p class="text-white/80">Departemen HMPSIK</p>
+        </div>
+
+        <!-- Content -->
+        <div class="modal-departemen-content">
+            <!-- Foto Bersama Departemen -->
+            <div class="modal-departemen-section">
+                <div class="flex justify-center">
+                        <img id="modalDepartemenFoto" src="" alt="Foto Bersama Departemen" class="w-full h-full object-cover" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Anggota Departemen -->
+            <div class="modal-departemen-section">
+                <h3 class="text-2xl md:text-3xl lg:text-4xl font-bold">Struktur Kepengurusan</h3>
+                <div id="modalAnggota" class="anggota-grid">
+                    <!-- Anggota akan diisi oleh JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Deskripsi Departemen -->
+            <div class="modal-departemen-section">
+                <h3>Deskripsi Departemen</h3>
+                <p id="modalDepartemenDeskripsi" class="text-gray-700 text-center hyphenate"></p>
+            </div>
+            
+            <!-- Program Kerja -->
+            <div class="modal-departemen-section">
+                <h3>Program Kerja</h3>
+                <ul id="modalDepartemenProgram" class="program-list">
+                    <!-- Program kerja akan diisi oleh JavaScript -->
+                </ul>
+            </div>
+
+            <!-- Agenda -->
+            <div class="modal-departemen-section">
+                <h3>Agenda</h3>
+                <ul id="modalDepartemenAgenda" class="agenda-list">
+                    <!-- Agenda akan diisi oleh JavaScript -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- Galeri Section -->
+    <section id="galeri" class="pt-20 md:pt-32 pb-2 md:pb-2 bg-gray-50">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-7 bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-800">
+                    Galeri Kegiatan
+                </h2>
+                <p class="text-gray-0 text-xl mb-6">Dokumentasi kegiatan HMPS Ilmu Keperawatan</p>
+                <div class="w-24 h-1 bg-gradient-to-r from-gray-0 to-gray-0 mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                
+                 <!-- Galeri Item 1 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl card-hover"
+                     data-nama="Pelantikan Pengurus HMPS Ilmu Keperawatan S1 Periode 2025/2026"
+                     data-deskripsi="Dilaksanakan di ruang Z.I.26 Fikes UMP."
+                     data-foto="d1.png, d2.png, d3.png, d4.png"
+                     data-program="Pelantikan, Perkenalan, Rapat Koordinasi"
+                     data-agenda="Pelantikan & Pelatihan"
+                     data-anggota='[]'>
+                        <div class="ratio-3-2 image-zoom">
+                            <div class="card-slideshow relative w-full h-full overflow-hidden">
+                                <div class="slides h-full w-full relative">
+                                    <img src="pelantikan (1).JPG" alt="Pelantikan 1" class="slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                    <img src="pelantikan (2).jpg" alt="Pelantikan 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                    <img src="pelantikan (3).JPG" alt="Pelantikan 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                    <img src="pelantikan (4).jpg" alt="Pelantikan 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                </div>
+
+                                <!-- controls -->
+                                <button class="prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10" aria-label="Previous slide">‹</button>
+                                <button class="nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10" aria-label="Next slide">›</button>
+
+                                <!-- indicators -->
+                                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                    <button class="indicator w-3 h-3 rounded-full bg-white/80" data-index="0" aria-label="Slide 1"></button>
+                                    <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Slide 2"></button>
+                                    <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Slide 3"></button>
+                                    <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Slide 4"></button>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-500 text-sm mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>30 September 2025 </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Pelantikan Pengurus HMPS Ilmu Keperawatan S1 Periode 2025/2026</h3>
+                        <p class="text-gray-0">Dilaksanakan di ruang Z.I.26 Fikes UMP.</p>
+                    </div>
+                </div>
+                
+                 <!-- Galeri Item 2 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl card-hover"
+                     data-nama="First Meet & Sharing Time"
+                     data-deskripsi="Sesi perkenalan dan sharing antar pengurus baru di ruang Z.I.26 Fikes UMP."
+                     data-foto="First Meet & Sharing Time.png, ssformal.png, IMG_8008.png, IMG_6845.JPG"
+                     data-program="Ice-breaking, Sharing Session"
+                     data-agenda="Perkenalan & Diskusi"
+                     data-anggota='[]'>
+                    <div class="ratio-3-2 image-zoom">
+                        <div class="card-slideshow relative w-full h-full overflow-hidden">
+                            <div class="slides h-full w-full relative">
+                                <img src="First Meet & Sharing Time.png" alt="First Meet 1" class="slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="ssformal.png" alt="First Meet 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="IMG_8008.png" alt="First Meet 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="IMG_6845.JPG" alt="First Meet 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                            <button class="prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10" aria-label="Previous slide">‹</button>
+                            <button class="nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10" aria-label="Next slide">›</button>
+                            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                <button class="indicator w-3 h-3 rounded-full bg-white/80" data-index="0" aria-label="Slide 1"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Slide 2"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Slide 3"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Slide 4"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-500 text-sm mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>7 Oktober 2025</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">First Meet & Sharing Time</h3>
+                        <p class="text-gray-0">Dilaksanakan di ruang Z.I.26 Fikes UMP.</p>
+                    </div>
+                </div>
+                
+                 <!-- Galeri Item 3 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl card-hover"
+                     data-nama="LKMM"
+                     data-deskripsi="Latihan Kepemimpinan dan Manajemen Mahasiswa (LKMM) untuk pengurus HMPSIK."
+                     data-foto="Rapat Kerja.png, b1.png, b2.png, d5.png"
+                     data-program="Pelatihan Kepemimpinan, Workshop"
+                     data-agenda="Rapat Kerja dan Evaluasi"
+                     data-anggota='[]'>
+                    <div class="ratio-3-2 image-zoom">
+                        <div class="card-slideshow relative w-full h-full overflow-hidden">
+                            <div class="slides h-full w-full relative">
+                                <img src="Rapat Kerja.png" alt="Rapat Kerja 1" class="slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="b1.png" alt="Rapat Kerja 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="b2.png" alt="Rapat Kerja 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="d5.png" alt="Rapat Kerja 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                            <button class="prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10" aria-label="Previous slide">‹</button>
+                            <button class="nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10" aria-label="Next slide">›</button>
+                            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                <button class="indicator w-3 h-3 rounded-full bg-white/80" data-index="0" aria-label="Slide 1"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Slide 2"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Slide 3"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Slide 4"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-500 text-sm mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>14 Oktober 2025 </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">LKMM</h3>
+                        <p class="text-gray-0">Dilaksanakan di ruang Z.I.26 Fikes UMP.</p>
+                    </div>
+                </div>
+                
+                 <!-- Galeri Item 4 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl card-hover"
+                     data-nama="Musyawarah Kerja"
+                     data-deskripsi="Musyawarah Kerja untuk menyusun program kerja departemen dan BPH HMPSIK."
+                     data-foto="Musyawarah Kerja.png, IMG_8009.JPG, d6.png, d7.png"
+                     data-program="Penyusunan Program Kerja, Sinkronisasi Departemen"
+                     data-agenda="Musyawarah & Konsolidasi"
+                     data-anggota='[]'>
+                    <div class="ratio-3-2 image-zoom">
+                        <div class="card-slideshow relative w-full h-full overflow-hidden">
+                            <div class="slides h-full w-full relative">
+                                <img src="Musyawarah Kerja.png" alt="Musyawarah 1" class="slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="IMG_8009.JPG" alt="Musyawarah 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="d6.png" alt="Musyawarah 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="d7.png" alt="Musyawarah 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                            <button class="prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10" aria-label="Previous slide">‹</button>
+                            <button class="nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10" aria-label="Next slide">›</button>
+                            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                <button class="indicator w-3 h-3 rounded-full bg-white/80" data-index="0" aria-label="Slide 1"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Slide 2"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Slide 3"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Slide 4"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-500 text-sm mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>19 Oktober 2025</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Musyawarah Kerja</h3>
+                        <p class="text-gray-0">Dilaksanakan di ruang Z.I.26 Fikes UMP.</p>
+                    </div>
+                </div>
+                
+                 <!-- Galeri Item 5 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl card-hover"
+                     data-nama="Pelatihan Administrasi"
+                     data-deskripsi="Pelatihan untuk meningkatkan kemampuan administrasi pengurus HMPSIK." 
+                     data-foto="Pelatihan Administrasi.png, s1.png, s2.png, s3.png"
+                     data-program="Pelatihan Administrasi, Rekapitulasi Surat"
+                     data-agenda="Pelatihan Internal"
+                     data-anggota='[]'>
+                    <div class="ratio-3-2 image-zoom">
+                        <div class="card-slideshow relative w-full h-full overflow-hidden">
+                            <div class="slides h-full w-full relative">
+                                <img src="Pelatihan Administrasi.png" alt="Pelatihan 1" class="slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="s1.png" alt="Pelatihan 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="s2.png" alt="Pelatihan 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="s3.png" alt="Pelatihan 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                            <button class="prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10" aria-label="Previous slide">‹</button>
+                            <button class="nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10" aria-label="Next slide">›</button>
+                            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                <button class="indicator w-3 h-3 rounded-full bg-white/80" data-index="0" aria-label="Slide 1"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Slide 2"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Slide 3"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Slide 4"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-500 text-sm mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>12-13 April 2025</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Pelatihan Administrasi</h3>
+                        <p class="text-gray-0">Dilaksanakan di ruang Z.I.26 Fikes UMP.</p>
+                    </div>
+                </div>
+                
+                 <!-- Galeri Item 6 -->
+                 <div class="bg-white rounded-2xl overflow-hidden shadow-xl card-hover"
+                     data-nama="Donor Darah"
+                     data-deskripsi="Kegiatan donor darah yang dilaksanakan di lobi rektorat Kampus 1 UMP." 
+                     data-foto="d4.png"
+                     data-program="Donor Darah, Cek Kesehatan"
+                     data-agenda="Kegiatan Sosial"
+                     data-anggota='[]'>
+                    <div class="ratio-3-2 image-zoom">
+                        <div class="card-slideshow relative w-full h-full overflow-hidden">
+                            <div class="slides h-full w-full relative">
+                                <img src="Donor Darah.png" alt="Donor 1" class="slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="donor darah2.png" alt="Donor 2" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="IMG_8009.JPG" alt="Donor 3" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                                <img src="d8.png" alt="Donor 4" class="slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-400" loading="lazy" onerror="this.style.display='none'">
+                            </div>
+                            <button class="prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10" aria-label="Previous slide">‹</button>
+                            <button class="nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10" aria-label="Next slide">›</button>
+                            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+                                <button class="indicator w-3 h-3 rounded-full bg-white/80" data-index="0" aria-label="Slide 1"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="1" aria-label="Slide 2"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="2" aria-label="Slide 3"></button>
+                                <button class="indicator w-3 h-3 rounded-full bg-white/40" data-index="3" aria-label="Slide 4"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center text-gray-500 text-sm mb-2">
+                            <i class="far fa-calendar-alt mr-2"></i>
+                            <span>9 November 2025</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Donor Darah</h3>
+                        <p class="text-gray-0">Dilaksanakan di loby rektorat Kampus 1 UMP.</p>
+                    </div>
+                </div>     
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery item modal (per-card) - now using departemen-style sections -->
+    <div id="galleryItemModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="bg-white rounded-md shadow-2xl max-w-full overflow-hidden modal-content-animate flex flex-col relative max-h-[90vh] overflow-y-auto" role="dialog" aria-modal="true">
+            <!-- Header -->
+            <div class="modal-departemen-header">
+                <button id="closeGalleryItemModal" class="absolute top-4 right-4 z-10 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition-all hover:rotate-90 duration-300" aria-label="Close gallery modal">
+                    <i class="fas fa-times text-white text-xl"></i>
+                </button>
+                <h2 id="galleryModalNama" class="text-2xl font-bold mb-2 text-white"></h2>
+                <p class="text-white/80">Galeri HMPSIK</p>
+            </div>
+
+            <!-- Content -->
+            <div class="modal-departemen-content">
+                <!-- Foto Kegiatan -->
+                <div class="modal-departemen-section">
+                    <div class="flex justify-center">
+                        <!-- modal slideshow (populated by JS) -->
+                        <!-- give modal slideshow a reliable aspect ratio so it actually has height -->
+                        <div id="galleryModalSlideshow" class="card-slideshow w-full max-w-4xl aspect-[16/9] rounded-2xl overflow-hidden relative bg-gray-200"></div>
+                    </div>
+                </div>
+
+                <!-- Struktur (optional) -->
+                <div class="modal-departemen-section">
+                    <h3 class="text-2xl md:text-3xl lg:text-4xl font-bold">Struktur / Participants</h3>
+                    <div id="galleryModalAnggota" class="anggota-grid">
+                        <!-- Anggota akan diisi oleh JavaScript (optional) -->
+                    </div>
+                </div>
+
+                <!-- Deskripsi Kegiatan -->
+                <div class="modal-departemen-section">
+                    <h3>Deskripsi Kegiatan</h3>
+                    <p id="galleryModalDeskripsi" class="text-gray-700 text-center hyphenate"></p>
+                </div>
+
+                <!-- Program Kerja -->
+                <div class="modal-departemen-section">
+                    <h3>Program Kerja</h3>
+                    <ul id="galleryModalProgram" class="program-list">
+                        <!-- Program kerja akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+
+                <!-- Agenda -->
+                <div class="modal-departemen-section">
+                    <h3>Agenda</h3>
+                    <ul id="galleryModalAgenda" class="agenda-list">
+                        <!-- Agenda akan diisi oleh JavaScript -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Footer -->
+    <footer class="gradient-bg text-white py-16">
+        <div class="w-full px-4 sm:px-6 lg:px-8">
+            <!-- Grid layout: 3 kolom menyamping -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                
+                <!-- Kolom 1: Tentang -->
+                <div>
+                    <div class="flex items-center mb-6">
+                        <img src="HMPSIK.png" alt="Logo HMPSIK" class="h-14 w-14 object-contain rounded-lg mr-3" loading="lazy">
+                        <h3 class="text-3xl font-bold">HMPSIK</h3>
+                    </div>
+                    <p class="text-white/90 leading-relaxed mb-4 text-sm">
+                        Himpunan Mahasiswa Program Studi Ilmu Keperawatan S1 adalah organisasi mahasiswa yang berkomitmen untuk mengembangkan potensi dan kreativitas mahasiswa dalam bidang keperawatan.
+                    </p>
+                    <p class="text-white/80 text-sm">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        Dusun II, Sokaraja Kulon, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181
+                    </p>
+                </div>
+                
+                <!-- Kolom 2: Menu Cepat -->
+                <div>
+                    <h4 class="text-xl font-bold mb-6">Menu Cepat</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#beranda" class="text-white/90 hover:text-white hover:translate-x-1 inline-block transition-all text-sm">Beranda</a></li>
+                        <li><a href="#tentang" class="text-white/90 hover:text-white hover:translate-x-1 inline-block transition-all text-sm">Tentang</a></li>
+                        <li><a href="#bph" class="text-white/90 hover:text-white hover:translate-x-1 inline-block transition-all text-sm">BPH</a></li>
+                        <li><a href="#departemen" class="text-white/90 hover:text-white hover:translate-x-1 inline-block transition-all text-sm">Departemen</a></li>
+                        <li><a href="#galeri" class="text-white/90 hover:text-white hover:translate-x-1 inline-block transition-all text-sm">Galeri</a></li>
+                        <li><a href="#footerKontak" class="text-white/90 hover:text-white hover:translate-x-1 inline-block transition-all text-sm">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Kolom 3: Kontak -->
+                <div id="footerKontak">
+                    <h4 class="text-xl font-bold mb-6">Kontak</h4>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="https://www.instagram.com/hmpsik_ump?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-white/90 hover:text-white transition-colors" aria-label="Instagram HMPSIK">
+                                <i class="fab fa-instagram text-xl" aria-hidden="true"></i>
+                                <span class="text-sm">@hmpsik_ump</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.tiktok.com/@hmpsiks1_ump?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-white/90 hover:text-white transition-colors" aria-label="TikTok HMPSIK">
+                                <i class="fab fa-tiktok text-xl" aria-hidden="true"></i> 
+                                <span class="text-sm">@hmpsiks1_ump</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:hmpskeps1ump@gmail.com" class="flex items-center gap-2 text-white/90 hover:text-white transition-colors" aria-label="Email HMPSIK">
+                                <i class="fas fa-envelope text-lg" aria-hidden="true"></i>
+                                <span class="text-sm">hmpskeps1ump@gmail.com</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+                
+                <!-- Contact moved to the Tentang section -->
+                
+            </div>
+            
+            <!-- Copyright -->
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-white text-lg">
+                    &copy; 2025 HMPSIK - Himpunan Mahasiswa Program Studi Ilmu Keperawatan S1.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="fixed bottom-8 right-8 w-12 h-12 gradient-bg text-white rounded-full shadow-2xl opacity-0 invisible transition-all hover:scale-110 z-40">
+        <i class="fas fa-arrow-up text-xl"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // ===========================
+        // MOBILE MENU FUNCTIONALITY
+        // ===========================
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        if (mobileMenuBtn && mobileMenu) {
+            // Toggle mobile menu (update ARIA attributes)
+            mobileMenuBtn.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', (!isHidden).toString());
+                mobileMenu.setAttribute('aria-hidden', isHidden.toString());
+            });
+
+            // Close mobile menu when clicking a link
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    mobileMenu.setAttribute('aria-hidden', 'true');
+                });
+            });
+        }
+
+        // ===========================
+        // NAVBAR SCROLL EFFECT
+        // ===========================
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('gradient-bg', 'shadow-lg');
+            } else {
+                navbar.classList.remove('gradient-bg', 'shadow-lg');
+            }
+        });
+
+        // ===========================
+        // SCROLL TO TOP BUTTON
+        // ===========================
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove('opacity-0', 'invisible');
+                scrollTopBtn.classList.add('opacity-100', 'visible');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'invisible');
+                scrollTopBtn.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===========================
+        // PENGURUS MODAL SYSTEM
+        // ===========================
+        // --- soft-hyphen mapping for long names ---
+        // Add names here and the exact spot(s) where soft-hyphens should allow breaks
+        const softHyphenMap = {
+            'Mohammad Iqbal Firjatulloh': 'Mo\u00ADham\u00ADmad Iq\u00ADbal Fir\u00ADjat\u00ADul\u00ADloh',
+            'Firotul Azyan Zera A': 'Fi\u00ADrotul Azy\u00ADan Ze\u00ADra A',
+            'Lulu Lutfiatul Fajriah2': 'Lu\u00ADlu Lut\u00ADfia\u00ADtul Fa\u00ADjriah2',
+            'Ibnu Muhammad N': 'Ib\u00ADnu Mu\u00ADham\u00ADmad N'
+        };
+
+        const hyphenateName = (name) => {
+            if (!name || typeof name !== 'string') return name || '';
+            if (softHyphenMap[name]) return softHyphenMap[name];
+            // default: for very long continuous words, insert a soft hyphen approximately every 10 chars
+            return name.split(' ').map(part => {
+                if (part.length > 18 && !part.includes('\u00AD')) {
+                    return part.replace(/(.{8,12})/g, '$1\u00AD');
+                }
+                return part;
+            }).join(' ');
+        };
+        // ===========================
+        // IMAGE CANDIDATE BUILDER + LOADER (shared helpers)
+        // trySetImageSrc takes an <img> element and an array of candidate URLs
+        // and attempts them in sequence, falling back to `placeholder` when none succeed.
+        const buildCandidates = (raw) => {
+            if (!raw) return [];
+            raw = String(raw).trim();
+            const imgMatch = raw.match(/<img\s+[^>]*src=(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i);
+            if (imgMatch) {
+                raw = imgMatch[1] || imgMatch[2] || imgMatch[3] || '';
+                raw = String(raw).trim();
+            }
+            const arr = [];
+            if (/^https?:\/\//i.test(raw) || raw.startsWith('/')) {
+                arr.push(encodeURI(raw));
+                return arr;
+            }
+            // try the raw value first
+            arr.push(encodeURI(raw));
+            const basename = raw.includes('/') ? raw.split('/').pop() : raw;
+            if (basename && basename !== raw) arr.push(encodeURI(basename));
+            // try common folders
+            arr.push(encodeURI('assets/' + raw));
+            if (basename && basename !== raw) arr.push(encodeURI('assets/' + basename));
+            arr.push(encodeURI('Image/' + raw));
+            if (basename && basename !== raw) arr.push(encodeURI('Image/' + basename));
+            arr.push(encodeURI('assets/departemen/' + raw));
+            arr.push(encodeURI('assets/anggota/' + raw));
+            return Array.from(new Set(arr));
+        };
+
+        const trySetImageSrc = (imgEl, candidates, placeholder) => {
+            if (!imgEl) return;
+            const list = Array.isArray(candidates) ? candidates.slice() : [];
+            if (!list.length) {
+                // if placeholder display is disabled globally, hide the element
+                if (typeof IMAGE_SHOW_PLACEHOLDER !== 'undefined' && !IMAGE_SHOW_PLACEHOLDER) {
+                    imgEl.src = '';
+                    imgEl.style.display = 'none';
+                } else {
+                    imgEl.src = placeholder || '';
+                    imgEl.style.display = placeholder ? '' : 'none';
+                }
+                return;
+            }
+
+            // clear any previous handlers to avoid unexpected calls
+            imgEl.onload = null;
+            imgEl.onerror = null;
+
+            const next = () => {
+                if (!list.length) {
+                    if (typeof IMAGE_SHOW_PLACEHOLDER !== 'undefined' && !IMAGE_SHOW_PLACEHOLDER) { imgEl.src = ''; imgEl.style.display = 'none'; return; }
+                    imgEl.src = placeholder || ''; imgEl.style.display = placeholder ? '' : 'none'; return;
+                }
+                const src = list.shift();
+                console.debug('[trySetImageSrc] trying', src);
+                imgEl.onload = () => { imgEl.onerror = null; imgEl.style.display = ''; console.debug('[trySetImageSrc] loaded', src); };
+                imgEl.onerror = () => { console.debug('[trySetImageSrc] fail', src); next(); };
+                imgEl.src = src;
+            };
+
+            next();
+        };
+
+        // Lightweight diagnostics (opt-in) — set to true while verifying behavior
+        const IMAGE_HELPER_DEBUG = false;
+
+        // Global behavior toggle: when false, missing images will NOT show placeholders
+        // and the image element will be hidden instead. Set to true to keep placeholders.
+        const IMAGE_SHOW_PLACEHOLDER = false;
+
+        // central handler for inline `onerror` events so behavior is consistent
+        function handleImageError(imgEl, fallback, forceShow = false) {
+            try {
+                imgEl.onerror = null; // prevent loops
+                // if placeholders are enabled globally OR the caller forces a show,
+                // we'll set the fallback image; otherwise hide the element.
+                if ((IMAGE_SHOW_PLACEHOLDER || forceShow) && fallback) {
+                    imgEl.src = fallback;
+                    imgEl.style.display = '';
+                } else {
+                    imgEl.style.display = 'none';
+                }
+            } catch (e) { /* safety */ }
+        }
+
+        if (IMAGE_HELPER_DEBUG) {
+            document.addEventListener('DOMContentLoaded', () => {
+                try {
+                    console.info('[IMG-DEBUG] Running small verification of buildCandidates/trySetImageSrc');
+                    const samplePengurus = document.querySelector('.pengurus-card');
+                    if (samplePengurus) console.info('[IMG-DEBUG] pengurus.dataset.image ->', samplePengurus.dataset.image, '=>', buildCandidates(samplePengurus.dataset.image));
+                    const sampleDepartemen = document.querySelector('.departemen-card');
+                    if (sampleDepartemen) console.info('[IMG-DEBUG] departemen.dataset.foto ->', sampleDepartemen.dataset.foto, '=>', buildCandidates(sampleDepartemen.dataset.foto));
+                    const firstAnggotaImg = document.querySelector('.departemen-card')?.dataset?.anggota;
+                    if (firstAnggotaImg) {
+                        try {
+                            const arr = JSON.parse(firstAnggotaImg);
+                            console.info('[IMG-DEBUG] first departemen anggota parsed examples ->', arr.slice(0,2).map(m => ({nama: m.nama, fotoCandidates: buildCandidates(m.foto)})));
+                        } catch (e) { /* ignore */ }
+                    }
+                } catch (e) { console.warn('[IMG-DEBUG] diagnostic failed', e); }
+            });
+        }
+
+        // Ensure important BPH banner images are visible: if the source is missing
+        // or the element was hidden, force a placeholder so the section isn't blank.
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const banner = document.querySelector('#bph img[alt*="Ketua dan Wakil"]');
+                const bigFallback = 'https://via.placeholder.com/1200x480/eeeeee/777777?text=Ketua+Wakil';
+
+                const smallFallback = 'https://via.placeholder.com/480x3/eeeeee/777777?text=Foto';
+
+                const checkAndFallback = async (imgEl, fallback, force = true) => {
+                    if (!imgEl) return;
+                    // If the browser already tried loading and failed OR element is hidden, set fallback asap
+                    if ((imgEl.complete && imgEl.naturalWidth === 0) || (imgEl.style && imgEl.style.display === 'none')) {
+                        return handleImageError(imgEl, fallback, force);
+                    }
+
+                    // Prefer using any supplied data-src so we can keep placeholder visible
+                    // and then try to replace it with the target asset using the safe loader.
+                    const target = imgEl.dataset && imgEl.dataset.src ? imgEl.dataset.src : imgEl.getAttribute('src');
+                    if (!target) return handleImageError(imgEl, fallback, force);
+
+                    // Try to load the original asset and fall back to placeholder automatically
+                    trySetImageSrc(imgEl, buildCandidates(target), fallback);
+                };
+
+                // ensure banner
+                if (banner) checkAndFallback(banner, bigFallback, true);
+
+                // ensure all small profile images inside #bph (cards) also have backup placeholders
+                const bphSection = document.getElementById('bph');
+                if (bphSection) {
+                    const imgs = Array.from(bphSection.querySelectorAll('img'));
+                    imgs.forEach(img => {
+                        // skip banner already handled
+                        if (img === banner) return;
+                        // use small fallback for non-banner images
+                        checkAndFallback(img, smallFallback, true);
+                    });
+                }
+            } catch (e) { /* defensive */ }
+        });
+
+        class PengurusModal {
+            constructor(group) {
+                this.group = group;
+                this.cards = group.querySelectorAll('.pengurus-card');
+                this.modal = group.querySelector('.pengurusModal');
+                
+                if (!this.modal) return;
+                
+                this.closeBtn = this.modal.querySelector('.closeModalBtn');
+                this.init();
+            }
+            
+            init() {
+                // Add click event to each card (be defensive: avoid double-binding and stop propagation)
+                this.cards.forEach(card => {
+                    // prevent attaching multiple handlers to the same element
+                    if (card.dataset.modalBound === 'true') return;
+                    card.dataset.modalBound = 'true';
+
+                    card.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.openModal(card);
+                    });
+                });
+                
+                // Close button
+                this.closeBtn.addEventListener('click', () => this.closeModal());
+                
+                // Close when clicking outside
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.closeModal();
+                    }
+                });
+                
+                // Close with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !this.modal.classList.contains('hidden')) {
+                        this.closeModal();
+                    }
+                });
+            }
+            
+            openModal(card) {
+                const data = {
+                    name: card.dataset.name,
+                    jabatan: card.dataset.jabatan,
+                    image: card.dataset.image,
+                    fotoBersama: card.dataset.fotoBersama,
+                    bio: card.dataset.bio,
+                    program: card.dataset.program
+                };
+                
+                // Populate modal content (guard and set logo if provided)
+                const nameEl = this.modal.querySelector('.modalName');
+                const jabatanEl = this.modal.querySelector('.modalJabatan');
+                const bioEl = this.modal.querySelector('.modalBio');
+                const fotoBersamaEl = this.modal.querySelector('.modalFotoBersama');
+                const logoEl = this.modal.querySelector('.modalLogo');
+
+                if (nameEl) nameEl.textContent = hyphenateName(data.name || '');
+                if (jabatanEl) jabatanEl.textContent = data.jabatan || '';
+                if (bioEl) bioEl.textContent = data.bio || '';
+
+                // Prefer showing the group photo (fotoBersama). If it exists we'll
+                // display it and hide the per-person image. If not, fall back to
+                // the individual `image` if available.
+                const bigFallback = 'https://via.placeholder.com/800x300/eeeeee/777777?text=Kosong';
+                const smallFallback = 'https://via.placeholder.com/400x400/eeeeee/777777?text=Kosong';
+
+                if (fotoBersamaEl && (data.fotoBersama || data.image)) {
+                    const fotoCandidates = buildCandidates(data.fotoBersama || data.image || '');
+                    trySetImageSrc(fotoBersamaEl, fotoCandidates, bigFallback);
+                    fotoBersamaEl.style.display = '';
+                } else {
+                    // no group photo available — hide the group-photo element
+                    if (fotoBersamaEl) fotoBersamaEl.style.display = 'none';
+                }
+
+                // per-card logo: check dataset first, fall back to data-default on the logo element
+                if (logoEl) {
+                    const cardLogo = card.dataset.logo || card.dataset.logoSrc || '';
+                    logoEl.src = cardLogo || (logoEl.dataset ? logoEl.dataset.default : 'hmpsik.png');
+                    logoEl.alt = `Logo ${data.name || data.jabatan || ''}`;
+                }
+                
+                // make sure visible name tags already on the page also get hyphenation applied
+                try {
+                    // hyphenate static name displays inside this group (if present)
+                    const displayNameEls = this.group.querySelectorAll('.p-6 p');
+                    displayNameEls.forEach(el => {
+                        // keep only names that look long or that match mapping
+                        const original = el.textContent || '';
+                        if (softHyphenMap[original] || (original.replace(/\s/g,'').length > 18)) {
+                            el.textContent = hyphenateName(original);
+                        }
+                    });
+                } catch (e) { /* defensive */ }
+
+                // Populate program kerja
+                const programList = this.modal.querySelector('.modalProgram');
+                programList.innerHTML = '';
+                if (data.program) {
+                    data.program.split(',').forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.trim();
+                        programList.appendChild(li);
+                    });
+                }
+                
+                // Safety: make sure other pengurus modals are closed first
+                document.querySelectorAll('.pengurusModal').forEach(m => {
+                    if (m !== this.modal) {
+                        m.classList.add('hidden');
+                        m.classList.remove('flex');
+                    }
+                });
+
+                // Show target modal
+                this.modal.classList.remove('hidden');
+                this.modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeModal() {
+                this.modal.classList.add('hidden');
+                this.modal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Initialize all pengurus modals
+        document.querySelectorAll('.pengurus-group').forEach(group => {
+            new PengurusModal(group);
+        });
+
+        // ===========================
+        // DEPARTEMEN MODAL SYSTEM
+        // ===========================
+        class DepartemenModal {
+            constructor() {
+                this.cards = document.querySelectorAll('.departemen-card');
+                this.modal = document.getElementById('departemenModal');
+                this.closeBtn = document.getElementById('closeDepartemenModal');
+                
+                if (!this.modal) return;
+                
+                this.init();
+            }
+            
+            init() {
+                // Add click event to each card (defensive: prevent double-binding)
+                this.cards.forEach(card => {
+                    if (card.dataset.modalBound === 'true') return;
+                    card.dataset.modalBound = 'true';
+                    card.addEventListener('click', () => this.openModal(card));
+                });
+                
+                // Close button
+                this.closeBtn.addEventListener('click', () => this.closeModal());
+                
+                // Close when clicking outside
+                this.modal.addEventListener('click', (e) => {
+                    if (e.target === this.modal) {
+                        this.closeModal();
+                    }
+                });
+                
+                // Close with Escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !this.modal.classList.contains('hidden')) {
+                        this.closeModal();
+                    }
+                });
+            }
+            
+            openModal(card) {
+                const data = {
+                    nama: card.dataset.nama,
+                    deskripsi: card.dataset.deskripsi,
+                    program: card.dataset.program,
+                    agenda: card.dataset.agenda,
+                    foto: card.dataset.foto,
+                    anggota: JSON.parse(card.dataset.anggota)
+                };
+                
+                // Populate modal content
+                document.getElementById('modalDepartemenNama').textContent = data.nama;
+                document.getElementById('modalDepartemenDeskripsi').textContent = data.deskripsi;
+                // (uses shared buildCandidates + trySetImageSrc helpers defined earlier)
+
+                // placeholder if no foto exists
+                const _placeholder = 'https://via.placeholder.com/400x400/eeeeee/777777?text=Kosong';
+                trySetImageSrc(document.getElementById('modalDepartemenFoto'), buildCandidates(data.foto), _placeholder);
+                
+                // Populate anggota — show exactly 6 square photos (3x2), fill missing slots with placeholders
+                const anggotaContainer = document.getElementById('modalAnggota');
+                anggotaContainer.innerHTML = '';
+                const members = Array.isArray(data.anggota) ? data.anggota : [];
+                const placeholder = 'https://via.placeholder.com/400x400/eeeeee/777777?text=Kosong';
+
+                for (let i = 0; i < 6; i++) {
+                    const member = members[i] || null;
+                    const div = document.createElement('div');
+                    div.className = 'anggota-card';
+
+                    // take member.foto and convert to a usable img src string
+                    const srcCandidates = member && member.foto ? buildCandidates(member.foto) : [];
+                    const nama = member && member.nama ? member.nama : '';
+                    const jabatan = member && member.jabatan ? member.jabatan : '';
+
+                    // Create image and text nodes for anggota (use trySetImageSrc to try multiple paths)
+                    const img = document.createElement('img');
+                    img.alt = `Foto ${nama || 'Kosong'}`;
+                    img.loading = 'lazy';
+                    // try candidate sources then fallback to placeholder
+                    trySetImageSrc(img, srcCandidates, placeholder);
+
+                    const jabEl = document.createElement('p');
+                    jabEl.className = 'anggota-jabatan text-sm text-gray-700';
+                    jabEl.textContent = jabatan;
+
+                    const namaEl = document.createElement('p');
+                    namaEl.className = 'anggota-nama text-sm text-gray-500 truncate';
+                        namaEl.textContent = hyphenateName(nama);
+
+                    div.appendChild(img);
+                    div.appendChild(jabEl);
+                    div.appendChild(namaEl);
+
+                    anggotaContainer.appendChild(div);
+                }
+                
+                // Populate program kerja
+                const programList = document.getElementById('modalDepartemenProgram');
+                programList.innerHTML = '';
+                if (data.program) {
+                    data.program.split(',').forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.trim();
+                        programList.appendChild(li);
+                    });
+                }
+                
+                // Populate agenda
+                const agendaList = document.getElementById('modalDepartemenAgenda');
+                agendaList.innerHTML = '';
+                if (data.agenda) {
+                    data.agenda.split(',').forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item.trim();
+                        agendaList.appendChild(li);
+                    });
+                } else {
+                    agendaList.innerHTML = '<li class="text-gray-500 italic">Tidak ada agenda saat ini</li>';
+                }
+                
+                // Show modal
+                this.modal.classList.remove('hidden');
+                this.modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeModal() {
+                this.modal.classList.add('hidden');
+                this.modal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Initialize departemen modal
+        new DepartemenModal();
+
+        // ===========================
+        // GALLERY -> use departemen-style modal
+        // ===========================
+        (function() {
+            const galleryModal = document.getElementById('galleryItemModal');
+            if (!galleryModal) return;
+
+            const modalSlideshowContainer = document.getElementById('galleryModalSlideshow');
+            const namaEl = document.getElementById('galleryModalNama');
+            const anggotaGrid = document.getElementById('galleryModalAnggota');
+            const descEl = document.getElementById('galleryModalDeskripsi');
+            const programList = document.getElementById('galleryModalProgram');
+            const agendaList = document.getElementById('galleryModalAgenda');
+
+            const closeBtn = document.getElementById('closeGalleryItemModal');
+            // handle for the currently active modal slideshow
+            let modalSlideshowHandle = null;
+
+            const cards = Array.from(document.querySelectorAll('#galeri .card-hover'));
+            cards.forEach(card => {
+                // avoid double-binding
+                if (card.dataset.galleryBound === 'true') return;
+                card.dataset.galleryBound = 'true';
+
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    const data = {
+                        nama: card.dataset.nama || card.querySelector('h3')?.textContent || '',
+                        deskripsi: card.dataset.deskripsi || card.querySelector('p')?.textContent || '',
+                        foto: card.dataset.foto || card.querySelector('img')?.getAttribute('src') || '',
+                        program: card.dataset.program || '',
+                        agenda: card.dataset.agenda || '',
+                        anggota: card.dataset.anggota || ''
+                    };
+
+                    // populate header/title
+                    if (namaEl) namaEl.textContent = data.nama;
+
+                    // Photo(s) — build a modal slideshow using the (comma separated) data.foto list
+                    if (modalSlideshowContainer) {
+                        // cleanup previous modal slideshow if still active
+                        try { if (modalSlideshowHandle && typeof modalSlideshowHandle.destroy === 'function') modalSlideshowHandle.destroy(); } catch (e) { /* ignore */ }
+                        modalSlideshowHandle = null;
+
+                        modalSlideshowContainer.innerHTML = '';
+                        const items = data.foto ? String(data.foto).split(',').map(s => s.trim()).filter(Boolean) : [];
+
+                        // fallback: if no items, use card image src
+                        if (!items.length && card.querySelector('img')) items.push(card.querySelector('img').getAttribute('src'));
+
+                        // create slides markup
+                        const slidesWrapper = document.createElement('div');
+                        slidesWrapper.className = 'slides h-full w-full relative';
+
+                        items.forEach((src, i) => {
+                            // top-level slide element (initSlideshow expects .slide elements)
+                            const slide = document.createElement('div');
+                            slide.className = 'slide absolute inset-0 w-full h-full opacity-0 transition-opacity duration-400 relative overflow-hidden';
+
+                            // inner image element (hidden until load) and placeholder overlay
+                            const img = document.createElement('img');
+                            img.className = 'modal-slide-img absolute inset-0 w-full h-full object-cover';
+                            img.setAttribute('alt', `${data.nama} ${i+1}`);
+                            img.style.display = 'none';
+
+                            const placeholder = document.createElement('div');
+                            placeholder.className = 'img-placeholder';
+                            const spinner = document.createElement('div');
+                            spinner.className = 'spinner';
+                            placeholder.appendChild(spinner);
+
+                            // ensure we remove placeholder when image finishes loading
+                            img.addEventListener('load', () => {
+                                try { img.style.display = ''; } catch (e) {}
+                                // mark slide as loaded so CSS can fade out placeholder
+                                slide.classList.add('loaded');
+                            });
+
+                            // attempt safe load (trySetImageSrc will call onload/onerror)
+                            trySetImageSrc(img, buildCandidates(src), '');
+
+                            slide.appendChild(img);
+                            slide.appendChild(placeholder);
+                            slidesWrapper.appendChild(slide);
+                        });
+
+                        modalSlideshowContainer.appendChild(slidesWrapper);
+
+                        // add controls
+                        const prevBtn = document.createElement('button');
+                        prevBtn.className = 'prevSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute left-3 top-1/2 -translate-y-1/2 z-10';
+                        prevBtn.setAttribute('aria-label', 'Previous slide');
+                        prevBtn.innerText = '‹';
+
+                        const nextBtn = document.createElement('button');
+                        nextBtn.className = 'nextSlide p-2 rounded-full bg-white/50 hover:bg-white text-gray-800 shadow absolute right-3 top-1/2 -translate-y-1/2 z-10';
+                        nextBtn.setAttribute('aria-label', 'Next slide');
+                        nextBtn.innerText = '›';
+
+                        modalSlideshowContainer.appendChild(prevBtn);
+                        modalSlideshowContainer.appendChild(nextBtn);
+
+                        // indicators
+                        const indicatorWrap = document.createElement('div');
+                        indicatorWrap.className = 'absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-2';
+                        items.forEach((_, i) => {
+                            const dot = document.createElement('button');
+                            dot.className = 'indicator w-3 h-3 rounded-full bg-white/40';
+                            dot.dataset.index = String(i);
+                            dot.setAttribute('aria-label', `Slide ${i+1}`);
+                            if (i === 0) { dot.classList.remove('bg-white/40'); dot.classList.add('bg-white/80'); }
+                            indicatorWrap.appendChild(dot);
+                        });
+                        modalSlideshowContainer.appendChild(indicatorWrap);
+
+                        // initialize slideshow
+                        // initSlideshow is defined earlier — reuse it
+                        console.debug('[GALLERY] modal images for', data.nama, '->', items);
+                        try {
+                            modalSlideshowHandle = (typeof window.initSlideshow === 'function') ? window.initSlideshow(modalSlideshowContainer, { auto: true, interval: 3500 }) : null;
+                            console.debug('[GALLERY] initSlideshow returned', modalSlideshowHandle);
+                        } catch (e) { console.warn('[GALLERY] initSlideshow threw', e); modalSlideshowHandle = null; }
+
+                        // Fallback: if the slideshow helper isn't available or failed, show the first slide manually
+                        if (!modalSlideshowHandle) {
+                            const fallbackFirst = modalSlideshowContainer.querySelector('.slide');
+                            if (fallbackFirst) {
+                                fallbackFirst.classList.remove('opacity-0');
+                                fallbackFirst.classList.add('opacity-100');
+                                console.debug('[GALLERY] fallback: made first slide visible for', data.nama);
+                            }
+                        }
+                    }
+
+                    // populate anggota grid if provided (expects JSON array)
+                    if (anggotaGrid) {
+                        anggotaGrid.innerHTML = '';
+                        try {
+                            const arr = data.anggota ? JSON.parse(data.anggota) : [];
+                            if (Array.isArray(arr) && arr.length) {
+                                arr.forEach(a => {
+                                    const div = document.createElement('div');
+                                    div.className = 'anggota-card';
+                                    const imgWrapper = document.createElement('div');
+                                    imgWrapper.innerHTML = a.foto || '';
+                                    const jab = document.createElement('div');
+                                    jab.className = 'anggota-jabatan';
+                                    jab.textContent = a.jabatan || '';
+                                    const nama = document.createElement('div');
+                                    nama.className = 'anggota-nama';
+                                    nama.textContent = a.nama || '';
+                                    div.appendChild(imgWrapper);
+                                    div.appendChild(jab);
+                                    div.appendChild(nama);
+                                    anggotaGrid.appendChild(div);
+                                });
+                            }
+                        } catch (e) { /* ignore if not JSON */ }
+                    }
+
+                    // description
+                    if (descEl) descEl.textContent = data.deskripsi || '';
+
+                    // program: split by comma if present
+                    if (programList) {
+                        programList.innerHTML = '';
+                        if (data.program) {
+                            data.program.split(',').map(s => s.trim()).filter(Boolean).forEach(p => {
+                                const li = document.createElement('li');
+                                li.textContent = p;
+                                programList.appendChild(li);
+                            });
+                        }
+                    }
+
+                    // agenda: split by comma
+                    if (agendaList) {
+                        agendaList.innerHTML = '';
+                        if (data.agenda) {
+                            data.agenda.split(',').map(s => s.trim()).filter(Boolean).forEach(a => {
+                                const li = document.createElement('li');
+                                li.textContent = a;
+                                agendaList.appendChild(li);
+                            });
+                        }
+                    }
+
+                    // show modal
+                    galleryModal.classList.remove('hidden');
+                    galleryModal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            // close behavior
+                if (closeBtn) closeBtn.addEventListener('click', () => {
+                // tear down modal slideshow if running
+                try { if (modalSlideshowHandle && typeof modalSlideshowHandle.destroy === 'function') modalSlideshowHandle.destroy(); } catch (e) { /* ignore */ }
+                modalSlideshowHandle = null;
+                    // clear slideshow contents
+                    if (modalSlideshowContainer) modalSlideshowContainer.innerHTML = '';
+
+                galleryModal.classList.add('hidden');
+                galleryModal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            });
+
+            galleryModal.addEventListener('click', (e) => {
+                if (e.target === galleryModal) {
+                    try { if (modalSlideshowHandle && typeof modalSlideshowHandle.destroy === 'function') modalSlideshowHandle.destroy(); } catch (e) { /* ignore */ }
+                    modalSlideshowHandle = null;
+                    if (modalSlideshowContainer) modalSlideshowContainer.innerHTML = '';
+
+                    galleryModal.classList.add('hidden');
+                    galleryModal.classList.remove('flex');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !galleryModal.classList.contains('hidden')) {
+                    try { if (modalSlideshowHandle && typeof modalSlideshowHandle.destroy === 'function') modalSlideshowHandle.destroy(); } catch (err) { /* ignore */ }
+                    modalSlideshowHandle = null;
+                    if (modalSlideshowContainer) modalSlideshowContainer.innerHTML = '';
+
+                    galleryModal.classList.add('hidden');
+                    galleryModal.classList.remove('flex');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        })();
+
+        // ===========================
+        // Slideshow helper + card-level initializer
+        // - initSlideshow(container, {auto, interval}) returns a handle with stop/start/destroy
+        // - Reused for card slideshows and modal slideshow
+        // ===========================
+        (function() {
+            const initSlideshow = (container, opts = {}) => {
+                if (!container || !(container instanceof Element)) return null;
+                const options = Object.assign({ auto: true, interval: 3500 }, opts);
+                const slides = Array.from(container.querySelectorAll('.slide'));
+                if (!slides.length) return null;
+
+                const prev = container.querySelector('.prevSlide');
+                const next = container.querySelector('.nextSlide');
+                const indicators = Array.from(container.querySelectorAll('.indicator'));
+
+                let current = 0;
+                let timer = null;
+
+                const show = (i) => {
+                    i = (i + slides.length) % slides.length;
+                    slides.forEach((s, si) => {
+                        if (si === i) {
+                            s.classList.remove('opacity-0');
+                            s.classList.add('opacity-100');
+                        } else {
+                            s.classList.add('opacity-0');
+                            s.classList.remove('opacity-100');
+                        }
+                    });
+
+                    if (indicators.length) {
+                        indicators.forEach((dot, di) => {
+                            if (di === i) {
+                                dot.classList.remove('bg-white/40');
+                                dot.classList.add('bg-white/80');
+                            } else {
+                                dot.classList.remove('bg-white/80');
+                                dot.classList.add('bg-white/40');
+                            }
+                        });
+                    }
+
+                    current = i;
+                    if (container) container.dataset.slideshowCurrent = String(current);
+                };
+
+                const nextSlide = () => show(current + 1);
+                const prevSlide = () => show(current - 1);
+
+                // named handlers so we can remove them later
+                const onNext = (e) => { e && e.stopPropagation(); nextSlide(); resetTimer(); };
+                const onPrev = (e) => { e && e.stopPropagation(); prevSlide(); resetTimer(); };
+                const onIndClick = (e) => {
+                    e && e.stopPropagation();
+                    const i = parseInt(e.currentTarget.dataset.index || '0', 10);
+                    show(i); resetTimer();
+                };
+
+                const startTimer = () => { if (timer) clearInterval(timer); if (options.auto) timer = setInterval(nextSlide, options.interval); };
+                const stopTimer = () => { if (timer) { clearInterval(timer); timer = null; } };
+                const resetTimer = () => { stopTimer(); startTimer(); };
+
+                // attach handlers
+                if (next) next.addEventListener('click', onNext);
+                if (prev) prev.addEventListener('click', onPrev);
+                indicators.forEach(dot => dot.addEventListener('click', onIndClick));
+
+                // pause on hover
+                const onEnter = () => { stopTimer(); };
+                const onLeave = () => { startTimer(); };
+                container.addEventListener('mouseenter', onEnter);
+                container.addEventListener('mouseleave', onLeave);
+
+                // start
+                show(0);
+                startTimer();
+
+                console.debug('[initSlideshow] started for', container, 'slides:', slides.length);
+
+                return {
+                    show, next: nextSlide, prev: prevSlide, start: startTimer, stop: stopTimer,
+                    destroy() {
+                        stopTimer();
+                        if (next) next.removeEventListener('click', onNext);
+                        if (prev) prev.removeEventListener('click', onPrev);
+                        indicators.forEach(dot => dot.removeEventListener('click', onIndClick));
+                        container.removeEventListener('mouseenter', onEnter);
+                        container.removeEventListener('mouseleave', onLeave);
+                    }
+                };
+            };
+
+            // Apply to all card slideshows on the page
+            const init = () => {
+                const slideshows = Array.from(document.querySelectorAll('.card-slideshow'));
+                slideshows.forEach(slideshow => {
+                    // avoid double-initializing
+                    if (slideshow.dataset.slideshowInit === 'true') return;
+                    try {
+                        initSlideshow(slideshow, { auto: true, interval: 3500 });
+                    } catch (e) {
+                        console.warn('[init] failed to init slideshow for', slideshow, e);
+                        // make sure first slide is visible so the card isn't blank
+                        const first = slideshow.querySelector('.slide');
+                        if (first) { first.classList.remove('opacity-0'); first.classList.add('opacity-100'); }
+                    }
+                    slideshow.dataset.slideshowInit = 'true';
+                });
+            };
+
+            // expose helper to global scope so other code can call it (modal initializer etc.)
+            try { window.initSlideshow = initSlideshow; } catch (e) { /* ignore non-browser env */ }
+
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+            // as a defensive safety net: after DOMContentLoaded, ensure any card-slideshow with
+            // no `data-slideshowInit` still shows the first slide (prevents blank cards if JS fails)
+            document.addEventListener('DOMContentLoaded', () => {
+                const slideshows = Array.from(document.querySelectorAll('.card-slideshow'));
+                slideshows.forEach(sl => {
+                    if (sl.dataset.slideshowInit !== 'true') {
+                        const f = sl.querySelector('.slide');
+                        if (f) { f.classList.remove('opacity-0'); f.classList.add('opacity-100'); }
+                    }
+                });
+            });
+        })();
+
+        // ===========================
+        // SMOOTH SCROLL
+        // ===========================
+        // improved smooth scroll that offsets the fixed navbar and toggles mobile menu
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // allow normal behavior for links that are just '#'
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (!target) return;
+
+                // compute offset to account for fixed navbar
+                const nav = document.getElementById('navbar');
+                const navHeight = nav ? nav.offsetHeight : 0;
+
+                // top position for target adjusted by navbar height + small gap
+                const top = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 12;
+
+                // If the link is inside the main navbar or mobile menu, perform an instant jump
+                // so the user is taken immediately to the section. For other in-page links
+                // keep the smooth scrolling behavior.
+                const isNavbarClick = !!(this.closest && (this.closest('#navbar') || this.closest('#mobileMenu')));
+                if (isNavbarClick) {
+                    // instant jump
+                    window.scrollTo({ top, behavior: 'auto' });
+                    // update the URL hash without triggering another navigation/scroll
+                    try { history.replaceState(null, '', href); } catch (e) { /* ignore */ }
+                } else {
+                    window.scrollTo({ top, behavior: 'smooth' });
+                }
+
+                // If mobile menu is open, close it after navigation
+                const mobileMenu = document.getElementById('mobileMenu');
+                const mobileBtn = document.getElementById('mobileMenuBtn');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                    if (mobileBtn) mobileBtn.setAttribute('aria-expanded', 'false');
+                    mobileMenu.setAttribute('aria-hidden', 'true');
+                }
+            });
+        });
+
+        // ===========================
+        // LOADING ANIMATION
+        // ===========================
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+
+        // ===========================
+        // INTERSECTION OBSERVER FOR ANIMATIONS
+        // ===========================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards and sections
+        document.querySelectorAll('.card-hover, .departemen-card, .fade-in-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ===========================
+        // CONSOLE MESSAGE
+        // ===========================
+        console.log('%c HMPSIK Website ', 'background: #667eea; color: white; font-size: 20px; padding: 10px;');
+        console.log('%c Developed with ❤️ for HMPS Ilmu Keperawatan S1 UMP ', 'color: #667eea; font-size: 12px;');
+
+        // Initialize AOS if available
+        if (window.AOS) {
+            AOS.init({ duration: 800, once: true });
+        }
+
+        // ===========================
+        // THEME SWITCHER (primary/secondary)
+        // ===========================
+        (() => {
+            const body = document.body;
+            const swatches = document.querySelectorAll('.theme-swatch');
+
+            const setTheme = (name) => {
+                if (name === 'alt') body.setAttribute('data-theme', 'alt');
+                else body.removeAttribute('data-theme');
+                // update visuals on swatches
+                swatches.forEach(s => s.classList.toggle('active', s.dataset.theme === name));
+                try { localStorage.setItem('hmpsik-theme', name); } catch(e) {}
+            };
+
+            // restore saved theme
+            try {
+                const saved = localStorage.getItem('hmpsik-theme');
+                if (saved) setTheme(saved);
+                else setTheme('default');
+            } catch(e) { setTheme('default'); }
+
+            // bind clicks (desktop + mobile swatches)
+            swatches.forEach(btn => btn.addEventListener('click', () => setTheme(btn.dataset.theme)));
+        })();
+
+        // ===========================
+        // HERO SLIDESHOW
+        // ===========================
+        (function () {
+            function initSlideshow(root, opts = {}) {
+                const slides = Array.from(root.querySelectorAll('.slide'));
+                const prev = root.querySelector('.prevSlide');
+                const next = root.querySelector('.nextSlide');
+                const indicators = Array.from(root.querySelectorAll('.indicator'));
+                if (!slides.length) return;
+
+                let current = 0;
+                let timer = null;
+
+                function show(i) {
+                    i = (i + slides.length) % slides.length;
+                    slides.forEach((s, idx) => {
+                        s.style.opacity = idx === i ? '1' : '0';
+                        s.style.zIndex = idx === i ? '10' : '1';
+                    });
+                    indicators.forEach((ind, idx) => {
+                        ind.classList.toggle('bg-white/', idx === i);
+                        ind.classList.toggle('bg-white/40', idx !== i);
+                    });
+                    current = i;
+                }
+
+                function nextSlide() { show(current + 1); }
+                function prevSlide() { show(current - 1); }
+
+                if (next) next.addEventListener('click', () => { nextSlide(); resetTimer(); });
+                if (prev) prev.addEventListener('click', () => { prevSlide(); resetTimer(); });
+
+                indicators.forEach(ind => ind.addEventListener('click', (e) => { show(Number(ind.dataset.index)); resetTimer(); }));
+
+                function startTimer() {
+                    if (opts.autoPlay) {
+                        stopTimer();
+                        timer = setInterval(() => { nextSlide(); }, opts.interval || 4000);
+                    }
+                }
+
+                function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+
+                function resetTimer() { stopTimer(); startTimer(); }
+
+                // Pause on hover
+                root.addEventListener('mouseenter', stopTimer);
+                root.addEventListener('mouseleave', startTimer);
+
+                // keyboard support
+                root.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowRight') { nextSlide(); resetTimer(); }
+                    if (e.key === 'ArrowLeft') { prevSlide(); resetTimer(); }
+                });
+
+                // initial
+                show(0);
+                startTimer();
+            }
+
+            // initialize both instances if present
+            document.addEventListener('DOMContentLoaded', () => {
+                const desktop = document.getElementById('heroSlideshowDesktop');
+                const mobile = document.getElementById('heroSlideshowMobile');
+                if (desktop)
+                 initSlideshow(desktop, { autoPlay: true, interval: 4500 });
+                if (mobile) initSlideshow(mobile, { autoPlay: true, interval: 4000 });
+            });
+        })();
+    </script>
+
+    <!-- Gallery item modal handler: populate and open/close per gallery card -->
+    <script>
+        (function () {
+            const modal = document.getElementById('galleryItemModal');
+            if (!modal) return;
+
+            const closeBtn = document.getElementById('closeGalleryItemModal');
+            const foto = document.getElementById('galleryItemModalFoto');
+            const titleEl = document.getElementById('galleryItemModalTitle');
+            const dateEl = document.getElementById('galleryItemModalDate');
+            const descEl = document.getElementById('galleryItemModalDesc');
+            const extrasSection = document.getElementById('galleryItemModalExtras');
+            const extrasList = document.getElementById('galleryItemModalList');
+
+            const openModal = () => { modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden'; };
+            const closeModal = () => { modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow = 'auto'; };
+
+            // attach to each gallery card
+            document.querySelectorAll('#galeri .card-hover').forEach(card => {
+                if (card.dataset.galleryBound === 'true') return;
+                card.dataset.galleryBound = 'true';
+
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    // image
+                    const img = card.querySelector('img');
+                    if (img && img.src) {
+                        foto.src = img.getAttribute('src') || img.src;
+                        foto.style.display = '';
+                    } else {
+                        foto.src = '';
+                        foto.style.display = 'none';
+                    }
+
+                    // date
+                    const dateSpan = card.querySelector('.flex.items-center.text-gray-500 span') || card.querySelector('span');
+                    dateEl.textContent = dateSpan ? dateSpan.textContent.trim() : '';
+
+                    // title
+                    const h3 = card.querySelector('h3');
+                    titleEl.textContent = h3 ? h3.textContent.trim() : '';
+
+                    // description - choose first paragraph that is not the date
+                    const paragraphs = Array.from(card.querySelectorAll('p'));
+                    let desc = '';
+                    for (const p of paragraphs) {
+                        if (p.querySelector('i')) continue; // skip small date container if it exists
+                        desc = p.textContent.trim();
+                        break;
+                    }
+                    descEl.textContent = desc || '';
+
+                    // extras: not used for gallery cards by default — clear/hide
+                    extrasList.innerHTML = '';
+                    extrasSection.classList.add('hidden');
+
+                    openModal();
+                });
+            });
+
+            // close handlers
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+        })();
+    </script>
+
+</body>
+</html>

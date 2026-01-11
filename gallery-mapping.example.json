@@ -1,0 +1,20 @@
+{
+  "items": [
+    {
+      "index": 1,
+      "image": "assets/gallery/new-pelantikan.jpg",
+      "date": "1 Januari 2026",
+      "title": "Pelantikan Pengurus — Versi Baru",
+      "description": "Dilaksanakan di Aula Utama — dokumentasi resmi pelantikan.",
+      "note": "example update for the first gallery item"
+    },
+    {
+      "index": 6,
+      "image": "assets/gallery/new-donor.png",
+      "date": "9 November 2025",
+      "title": "Donor Darah (update)",
+      "description": "Kegiatan donor darah dilaksanakan di lobi rektorat Kampus 1 UMP.",
+      "note": "example update for last gallery item"
+    }
+  ]
+}

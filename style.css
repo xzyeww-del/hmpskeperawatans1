@@ -1,0 +1,507 @@
+/* ===========================
+   GLOBAL STYLES
+   =========================== */
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: #f9fafb;
+}
+
+/* ===========================
+   CUSTOM SCROLLBAR
+   =========================== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #c7c7c7;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #5e616e 0%, #65606a 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #4a4d56 0%, #53505a 100%);
+}
+
+/* ===========================
+   GRADIENT BACKGROUNDS + THEME COLORS
+   =========================== */
+:root {
+    /* Theme palette (default) */
+    --color-primary: #667eea; /* indigo */
+    --color-secondary: #764ba2; /* purple */
+    --header-bg: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+.theme-alt {
+    /* optional alt theme helper if applied to root */
+}
+
+/* alternate color set (applied when body[data-theme="alt"]) */
+body[data-theme="alt"] {
+    --color-primary: #06b6d4; /* teal */
+    --color-secondary: #fb923c; /* orange */
+    --header-bg: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+.gradient-bg {
+    background: var(--header-bg);
+}
+
+/* ===========================
+   HERO SECTION
+   =========================== */
+.hero-parallax {
+    background-image: url('assets/BPH.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* ===========================
+   SLIDESHOW / HERO GALLERY
+   =========================== */
+.slideshow { position: relative; overflow: hidden; border-radius: 0.5rem; }
+.slideshow .slides { position: relative; width: 100%; height: 100%; }
+.slideshow .slide { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transform: scale(1.02); transition: opacity 600ms ease, transform 600ms ease; }
+.slideshow .slide { z-index: 0; }
+.slideshow .slide:not(.active) { pointer-events: none; }
+.slideshow .slide.active { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+/* make indicators easier to tap */
+.sl-indicators button { width: 12px; height: 12px; }
+
+/* slightly darker indicator container for readability */
+.sl-indicators { background: rgba(0,0,0,0.12); padding: 6px 8px; border-radius: 9999px; }
+
+/* arrows: soften visual style and add subtle shadow */
+.sl-prev, .sl-next { box-shadow: 0 8px 22px rgba(0,0,0,0.25); opacity: .95; }
+
+/* mobile: larger arrow hit area */
+@media (max-width: 640px) {
+    .sl-prev, .sl-next { width: 48px; height: 48px; padding: 0.5rem; }
+}
+
+.sl-prev, .sl-next { background: rgba(0,0,0,0.45); border: none; color: #fff; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; }
+.sl-prev:hover, .sl-next:hover { background: rgba(0,0,0,0.6); }
+
+.sl-indicators { display: flex; gap: 8px; align-items: center; }
+.sl-indicators button { width: 10px; height: 10px; border-radius: 999px; border: none; background: rgba(255,255,255,0.5); transition: transform 200ms ease, background 200ms ease; }
+.sl-indicators button.active { background: #ffffff; transform: scale(1.25); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+/* Make arrows slightly larger on bigger screens */
+@media (min-width: 1024px) {
+    .sl-prev, .sl-next { width: 46px; height: 46px; }
+}
+
+/* Theme switcher swatches */
+.theme-switcher { display:flex; gap:0.5rem; align-items:center; }
+.theme-switcher button.theme-swatch { width:30px; height:30px; border-radius:9999px; border:2px solid rgba(255,255,255,0.35); display:inline-block; cursor:pointer; padding:0; }
+.theme-switcher button.theme-swatch:focus { outline: 2px solid #fff; outline-offset: 2px; }
+.theme-swatch[data-theme="default"] { background: linear-gradient(135deg,#667eea,#764ba2); }
+.theme-swatch[data-theme="alt"] { background: linear-gradient(135deg,#06b6d4,#fb923c); }
+.theme-swatch.active { box-shadow: 0 6px 18px rgba(0,0,0,0.24); border-color: rgba(255,255,255,0.9); }
+
+
+@media (max-width: 768px) {
+    .hero-parallax {
+        background-attachment: scroll;
+    }
+
+    /* Small screens: tighten hero and center text */
+    section#beranda { min-height: 65vh; }
+    .hero-left { text-align: center !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+    .slideshow { height: 16rem !important; }
+
+    /* Mobile menu: make it a small dropdown panel under the nav */
+    #mobileMenu { position: absolute; left: 0; right: 0; top: 4.5rem; z-index: 9998; padding: 0.5rem 1rem; display: block; border-radius: 0.75rem; }
+}
+
+/* ===========================
+   CARD ANIMATIONS
+   =========================== */
+.card-hover {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* ===========================
+   MODAL ANIMATIONS
+   =========================== */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-content-animate {
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Modal Backdrop */
+.pengurusModal,
+#departemenModal,
+.galleryModal {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* ===========================
+   FADE IN UP ANIMATION
+   =========================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Intersection Observer Animation */
+.animate-in {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* ===========================
+   IMAGE ZOOM ON HOVER
+   =========================== */
+.image-zoom {
+    overflow: hidden;
+    position: relative;
+}
+
+.image-zoom img {
+    transition: transform 0.5s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-zoom:hover img {
+    transform: scale(1.1);
+}
+
+/* ===========================
+   SITE LOGO
+   =========================== */
+.site-logo {
+    height: 4rem;
+    width: auto;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.site-logo:hover {
+    transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+    .site-logo {
+        height: 5rem;
+    }
+
+    /* Center per-group modals on medium screens */
+    .pengurusModal { align-items: center; }
+    .pengurusModal .modal-content-animate { width: calc(100% - 4rem); max-width: 900px; height: auto; max-height: 90vh; border-radius: 12px; margin-top: 2rem; overflow-y: auto; }
+}
+
+@media (min-width: 1024px) {
+    /* Make the slideshow larger on wide screens */
+    .slideshow { height: 28rem !important; }
+
+    /* Tweak global modal inner containers */
+    .galleryModal .modal-inner, #departemenModal .modal-inner { max-width: 1100px; }
+    .pengurusModal .modal-content-animate { margin: 4rem auto; }
+}
+
+/* Ensure modal inner content is responsive on mobile */
+.galleryModal .modal-inner, #departemenModal .modal-inner { width: 95%; max-width: 48rem; margin: 1rem auto; }
+
+/* Very small screens adjustments */
+@media (max-width: 420px) {
+    .pengurus-card { padding: 1rem; }
+    .site-logo { height: 3rem; }
+}
+
+/* ===========================
+   NAVBAR STYLES
+   =========================== */
+#navbar {
+    transition: all 0.3s ease;
+}
+
+#navbar.gradient-bg {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: var(--header-bg) !important;
+}
+
+/* navigation link theme */
+.nav-link { color: white; transition: color 0.2s ease; }
+.nav-link:hover { color: var(--color-secondary); }
+
+/* ===========================
+   DEPARTEMEN CARDS
+   =========================== */
+.departemen-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.departemen-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.departemen-card:hover::before {
+    left: 100%;
+}
+
+/* ===========================
+   PENGURUS CARDS
+   =========================== */
+.pengurus-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.pengurus-card::after {
+    content: '👁️ Lihat Detail';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    color: white;
+    padding: 2rem 1rem 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    text-align: center;
+    font-weight: 600;
+}
+
+.pengurus-card:hover::after {
+    transform: translateY(0);
+}
+
+/* ===========================
+   MODAL CONTENT STYLES
+   =========================== */
+.modalName,
+.modalJabatan,
+#modalDepartemenNama {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Close Button */
+.closeModalBtn {
+    transition: all 0.3s ease;
+}
+
+.closeModalBtn:hover {
+    background-color: #f3f4f6 !important;
+    transform: rotate(90deg);
+}
+
+/* ===========================
+   SCROLL TO TOP BUTTON
+   =========================== */
+#scrollTopBtn {
+    transition: all 0.3s ease;
+}
+
+#scrollTopBtn:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* ===========================
+   LOADING ANIMATION
+   =========================== */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+body.loaded::before {
+    opacity: 0;
+}
+
+/* Footer: use secondary → primary gradient to contrast header */
+footer.gradient-bg { background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%); }
+
+/* ===========================
+   TEXT SELECTION
+   =========================== */
+::selection {
+    background-color: #667eea;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #667eea;
+    color: white;
+}
+
+/* ===========================
+   RESPONSIVE UTILITIES
+   =========================== */
+@media (max-width: 640px) {
+    .hero-parallax h1 {
+        font-size: 2.5rem;
+    }
+    
+    .site-logo {
+        height: 3rem;
+    }
+}
+
+/* ===========================
+   PRINT STYLES
+   =========================== */
+@media print {
+    .pengurusModal,
+    #departemenModal,
+    #navbar,
+    #scrollTopBtn,
+    footer {
+        display: none !important;
+    }
+}
+
+/* ===========================
+   ACCESSIBILITY
+   =========================== */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #667eea;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-to-content:focus {
+    top: 0;
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* ===========================
+   UTILITY CLASSES
+   =========================== */
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.shadow-glow {
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+/* ===========================
+   CUSTOM ANIMATIONS
+   =========================== */
+@keyframes pulse-slow {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes bounce-slow {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 2s infinite;
+}
+
+/* ===========================
+   DARK MODE SUPPORT (Optional)
+   =========================== */
+@media (prefers-color-scheme: dark) {
+    /* Uncomment to enable dark mode */
+    /* 
+    body {
+        background-color: #1a202c;
+        color: #e2e8f0;
+    }
+    */
+}
+
+/* ===========================
+   HERO IMAGE (static)
+   =========================== */
+.hero-image img { display:block; width:100%; height:auto; object-fit:cover; border-radius: 12px; }
+
+/* responsiveness */
+@media (min-width: 1024px) {
+    .hero-image img { max-height: 20rem; }
+}
+
+@media (max-width: 640px) {
+    .hero-image img { max-height: 12.5rem; }
+}
